@@ -38,7 +38,7 @@ public class testVSPA {
         vspa.addProceduralAutomaton(R, "a");
         vspa.setStartingAutomaton(S);
 
-        // Test - L(VPA) == grammar : S -> a(S+R)*z  ; R -> abz
+        // Test - L(VSPA) == grammar : S -> a(S+R)*z  ; R -> abz
         String[] words = {"a", "abz", "ab", "aabzz", "az", "aabzazz", "aabazzz", "aaz", "b", "aazz", "aabzazz", "aaaabzabzzabzzz", "aaabzabzzabzzz"};
         for (String w : words) {
             System.out.println("Input: " + w + " -> " + (vspa.accepts(w) ? "ACCEPTED" : "REJECTED"));
