@@ -1,0 +1,22 @@
+# Build directories
+/build/
+/dist/
+/out/
+
+# Compiled source files
+*.class
+*.o
+*.so
+*.dll
+
+# Dependency directories
+/vendor/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.cache
+
+# IDE specific files
+/.vscode/
