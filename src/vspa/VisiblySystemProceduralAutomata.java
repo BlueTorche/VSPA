@@ -4,10 +4,10 @@ import automaton.*;
 import java.util.*;
 
 public class VisiblySystemProceduralAutomata {
-    private final Set<ProceduralAutomaton> proceduralAutomata = new HashSet<>();
-    private final Map<ProceduralAutomaton, String> linkingFunction = new HashMap<>();
-    private VSPAAlphabet alphabet;
-    private ProceduralAutomaton startingAutomaton;
+    protected final Set<ProceduralAutomaton> proceduralAutomata = new HashSet<>();
+    protected final Map<String, String> linkingFunction = new HashMap<>();
+    protected VSPAAlphabet alphabet;
+    protected ProceduralAutomaton startingAutomaton;
 
     public void setVSPAAlphabet(VSPAAlphabet alphabet) {
         this.alphabet = alphabet;
@@ -15,7 +15,7 @@ public class VisiblySystemProceduralAutomata {
 
     public void addProceduralAutomaton(ProceduralAutomaton nfa, String callSymbol) {
         proceduralAutomata.add(nfa);
-        linkingFunction.put(nfa, callSymbol);
+        linkingFunction.put(nfa.getProceduralSymbol(), callSymbol);
     }
 
     public void setStartingAutomaton(ProceduralAutomaton nfa) {
@@ -23,7 +23,7 @@ public class VisiblySystemProceduralAutomata {
     }
 
     public boolean accepts(String word) {
-        if (!linkingFunction.get(startingAutomaton).equals(String.valueOf(word.charAt(0)))) {
+        if (!linkingFunction.get(startingAutomaton.getProceduralSymbol()).equals(String.valueOf(word.charAt(0)))) {
             return false;
         }
 
@@ -46,7 +46,7 @@ public class VisiblySystemProceduralAutomata {
                     State state = pair.getKey();
                     for (ProceduralAutomaton pa : proceduralAutomata) {
                         String procSymbol = pa.getProceduralSymbol();
-                        if (linkingFunction.get(pa).equals(symbol) &&
+                        if (linkingFunction.get(pa.getProceduralSymbol()).equals(symbol) &&
                                 !state.getTransitions(procSymbol).isEmpty()) {
                                     nextStates.add(new AbstractMap.SimpleEntry<>(pa.getInitalState(), procSymbol));
                         }
@@ -54,10 +54,10 @@ public class VisiblySystemProceduralAutomata {
                 }
             } else if (alphabet.getReturnSymbols().contains(symbol)) {
                 if (stack.isEmpty()) return false;
-                Set<Map.Entry<State, String>> possibleNextState = stack.removeLast();
+                Set<Map.Entry<State, String>> possibleNextState = stack.remove(stack.size() - 1);
                 for (Map.Entry<State, String> pair : currentStates) {
                     State state = pair.getKey();
-                    if (state.isFinal()) { // && bar f(j) = symbol ! 
+                    if (state.isFinal() && alphabet.getReturnFromCallSymbol(linkingFunction.get(pair.getValue())).equals(symbol)) { 
                         for (Map.Entry<State, String> pair2 : possibleNextState) {
                             for (State q : pair2.getKey().getTransitions(pair.getValue())) {
                                 nextStates.add(new AbstractMap.SimpleEntry<>(q, pair2.getValue()));
@@ -68,7 +68,7 @@ public class VisiblySystemProceduralAutomata {
             }
             currentStates = nextStates;
         }
-        if (alphabet.getReturnFromCallSymbol(linkingFunction.get(startingAutomaton)).equals(String.valueOf(word.charAt(word.length() - 1))) && 
+        if (alphabet.getReturnFromCallSymbol(linkingFunction.get(startingAutomaton.getProceduralSymbol())).equals(String.valueOf(word.charAt(word.length() - 1))) && 
                 stack.isEmpty()) {
             for (Map.Entry<State, String> pair : currentStates) {
                 if (pair.getKey().isFinal()) 

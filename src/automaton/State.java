@@ -22,7 +22,7 @@ public class State {
     }
 
     public void addTransition(String symbol, State target) {
-        transitions.computeIfAbsent(symbol, _ -> new HashSet<>()).add(target);
+        transitions.computeIfAbsent(symbol, _s -> new HashSet<>()).add(target);
     }
 
     public Set<State> getTransitions(String symbol) {

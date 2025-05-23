@@ -5,8 +5,12 @@ import vspa.*;
 
 public class testVSPA {
     public static void main(String[] args) {
+        //long start_memory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024;
         testVSPAWithGeneric();
+        //System.out.println("Memory used by testVSPAWithGeneric: " + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 - start_memory) + " KB");
+        // long start_memory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024;
         testVSPAWithJSON();
+        // System.out.println("Memory used by testVSPAWithJSON: " + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 - start_memory) + " KB");
     }
 
     private static void testVSPAWithGeneric() {
@@ -135,9 +139,10 @@ public class testVSPA {
         vspa.addProceduralAutomaton(S2, "{");
         vspa.setStartingAutomaton(S0);
 
+
         // Test - L(VPA) == grammar : S -> a(S+R)*z  ; R -> abz
-        String[] words = {"{}", "{as#b[s#s#s]#c{dn#ei}}", "{b[s#s#s]#c{dn#ei}}", 
-                        "{as#b[s#s#s]#c{}}", "{as#b[s#s#s#s#s#s#s]#c{}}", "{as#b[]#c{}}", 
+        String[] words = {"{}", "{as#b[s#s#s]#c{dn#ei}}", "{b[s#s#s]#c{dn#ei}}",
+                        "{as#b[s#s#s]#c{}}", "{as#b[s#s#s#s#s#s#s]#c{}}", "{as#b[}#c{}}", "{as#b[]#c{}}", 
                         "{as#b[s#s#]#c{}}", "{as#b[s#s#s#s]#c{dn}}", "{as#b[s#s#s#s]#c{ei}}", 
                         "[s#s]", "{as#b[s]#c{}}"
                         };
