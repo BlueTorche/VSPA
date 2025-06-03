@@ -232,7 +232,7 @@ public class testJSONVSPA {
         
         for (List<String> w : wordsList) {
             System.out.println("-------------------------Accepted----------------------------------------");
-            System.out.println("Input: " + String.join("", w) + " -> " + (vspa.accepts(w) ? "ACCEPTED" : "REJECTED"));
+            System.out.println("Input: " + String.join("", w) + " -> " + (vspa.accepts(w, false, false).first ? "ACCEPTED" : "REJECTED"));
         }
 
         
@@ -256,7 +256,7 @@ public class testJSONVSPA {
         
         for (List<String> w : wordsList) {
             System.out.println("-------------------------Rejected----------------------------------------");
-            System.out.println("Input: " + String.join("", w) + " -> " + (vspa.accepts(w) ? "ACCEPTED" : "REJECTED"));
+            System.out.println("Input: " + String.join("", w) + " -> " + (vspa.accepts(w, false, false).first ? "ACCEPTED" : "REJECTED"));
         }
     }
 }

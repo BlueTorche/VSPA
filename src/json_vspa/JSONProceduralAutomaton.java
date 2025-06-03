@@ -30,7 +30,6 @@ public class JSONProceduralAutomaton extends ProceduralAutomaton {
             for (String key : keySymbols) {
                 for (State successor : state.getTransitions(key)) {
                     for (Set<State> endStates : successor.getAllTransitions().values()) {
-                        System.out.println(state.toString() + "," + key + "," + endStates.toString());
                         for (State endState : endStates) {
                             vertices.add(new Vertex(state, endState, key));
                             

@@ -36,3 +36,6 @@ replay_pid*
 
 # IDE specific files
 /.vscode/
+
+/Result/
+*.csv

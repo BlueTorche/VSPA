@@ -19,28 +19,25 @@ public class SanitizeJSON {
                     jsonList.add(c);
                 continue;
             }
-
-            if (c.charAt(0) == '{' || c.charAt(0) == '['  || c.charAt(0) == '}'  || c.charAt(0) == ']') {
-                jsonList.add(String.valueOf(c.charAt(0)));
-                c = c.substring(1, c.length());
-            }
-
-            if (c.length() == 1) {
-                if (c.equals(",")) 
+            int i = 0;
+            for (int j = 0; j < c.length(); j++) {
+                if (c.charAt(j) == ',')  {
+                    if (j > i) {
+                        jsonList.add(c.substring(i, j));
+                    }
                     jsonList.add("#");
-                else 
-                    jsonList.add(c);
-                continue;
+                    i = j + 1;
+                }
+                else if (c.charAt(j) == '{' || c.charAt(j) == '}' || c.charAt(j) == '[' || c.charAt(j) == ']') {
+                    if (j > i) {
+                        jsonList.add(c.substring(i, j));
+                    }
+                    jsonList.add(String.valueOf(c.charAt(j)));
+                    i = j + 1;
+                }
             }
-
-            if (c.charAt(c.length()-1) == ',') {
-                jsonList.add(c.substring(0, c.length()-1));
-                jsonList.add("#");
-            } else if (c.charAt(c.length()-1) == '{' || c.charAt(c.length()-1) == '['  || c.charAt(c.length()-1) == '}'  || c.charAt(c.length()-1) == ']') {
-                jsonList.add(c.substring(0, c.length()-1));
-                jsonList.add(String.valueOf(c.charAt(c.length()-1)));
-            } else {
-                jsonList.add(c);
+            if (i < c.length()) {
+                jsonList.add(c.substring(i, c.length()));
             }
         }
         return jsonList;

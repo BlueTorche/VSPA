@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import automaton.State;
+import test.TestResult;
+import utils.Pair;
 import vspa.VisiblySystemProceduralAutomata;
 
 public class JSONVSPA extends VisiblySystemProceduralAutomata{
@@ -31,15 +33,29 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
         }
     }
 
-    public boolean accepts(List<String> word) {
-        // for (Map.Entry<String, String> entry : linkingFunction.entrySet()) {
-        //      System.out.println(entry.getKey() + " : " + entry.getValue());
-        // }
-        // System.out.println("Starting automaton: " + startingAutomaton.getProceduralSymbol());
-        // System.out.print(linkingFunction.get(startingAutomaton.getProceduralSymbol()));
-        // System.out.println(" " + word.get(0));
+    public int getKeyGraphSize() {
+        int size = 0;
+        for (JSONProceduralAutomaton pa : proceduralAutomata) {
+            if (pa.getKeyGraph() != null) {
+                size += pa.getKeyGraph().getVertices().size();
+            }
+        }
+        return size;
+    }
+
+    public Pair<Boolean,Long> accepts(List<String> word, boolean measureMemory, boolean debug) {
+        final long memoryStart;
+        long maxMemory;
+
+        if (measureMemory) {
+            memoryStart = TestResult.getMemoryUse();
+            maxMemory = memoryStart;
+        } else {
+            memoryStart = maxMemory = 0;
+        }
+
         if (!linkingFunction.get(startingAutomaton.getProceduralSymbol()).equals(word.get(0))) {
-            return false;
+            return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
         }
 
         Set<Map.Entry<State, String>> currentStates = new HashSet<>();
@@ -50,6 +66,10 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
         Set<Vertex> Good = new HashSet<>();
 
         if (word.size() > 2) {
+            if (measureMemory) {
+                System.gc();
+            }
+
             String nextSymbol = String.valueOf(word.get(1));
             for (Vertex vertex : startingAutomaton.getKeyGraph().getVerticesByKey(nextSymbol)) {
                 currentStates.add(new AbstractMap.SimpleEntry<>(vertex.startState, startingAutomaton.getProceduralSymbol()));
@@ -59,26 +79,20 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
             }
             K.add(nextSymbol);
             k = nextSymbol;
+
+            if (measureMemory) {
+                maxMemory = Math.max(maxMemory, TestResult.getMemoryUse());
+            }
         }
 
 
         for (int i = 1; i < word.size() - 1 ; i++) {
-            String symbol = word.get(i);
+            if (measureMemory) {
+                System.gc();
+            }
 
-            // System.out.println("Symbol : " + symbol);
-            // System.out.print("States : ");
-            // for (Map.Entry<State, String> pair : currentStates) {
-            //     System.out.print(pair.getKey().getName() + " ");
-            // }
-            // if (stack.size() > 0)
-            //     System.out.println("\nTop Stack : " + stack.get(stack.size() - 1).toString());
-            // else
-            //     System.out.println("\nStack : empty");
-            // System.out.println("R: " + R.toString());
-            // System.out.println("K: " + K.toString());
-            // System.out.println("k: " + k);
-            // System.out.println("Good: " + Good.toString());
-            // System.out.println("\n");
+            String symbol = word.get(i);
+            if (debug) debug(symbol, currentStates, stack, R, K, k, Good);
 
             Set<Map.Entry<State, String>> nextStates = new HashSet<>();
             Set<Reach> nextR = new HashSet<>();
@@ -89,7 +103,7 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
                     State state = pair.getKey();
                     for (JSONProceduralAutomaton pa : proceduralAutomata) {
                         String procSymbol = pa.getProceduralSymbol();
-                        if (linkingFunction.get(pa.getProceduralSymbol()).equals(symbol) &&
+                        if (linkingFunction.get(procSymbol).equals(symbol) &&
                                 !state.getTransitions(procSymbol).isEmpty()) {
                                     nextStates.add(new AbstractMap.SimpleEntry<>(pa.getInitalState(), procSymbol));
                         }
@@ -176,7 +190,7 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
             }
 
             else if (symbol.equals("]") || (symbol.equals("}") && R.isEmpty())) {
-                if (stack.isEmpty()) return false;
+                if (stack.isEmpty()) return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
                 StackElement stackElement = stack.remove(stack.size() - 1);
                 Set<Map.Entry<State, String>> possibleNextState = stackElement.states;
                 R = stackElement.R;
@@ -203,6 +217,8 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
             }
 
             else if (symbol.equals("}")) {
+                if (stack.isEmpty()) return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
+                
                 for (Reach reach : R) {
                     Good.add(new Vertex(reach.first, reach.second, k));
                 }
@@ -210,8 +226,6 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
                 Set<Map.Entry<State, String>> possibleNextState = stackElement.states;
                 R = stackElement.R;
                 k = stackElement.k;
-
-
 
                 // Recuperation of active procedural automata 
                 Set<String> procSymbols = new HashSet<>();
@@ -244,34 +258,58 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata{
                 Good = stackElement.Good;
             }
 
+            if (nextStates.isEmpty()) {
+                return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
+            }
             currentStates = nextStates;
             R = nextR;
+
+            if (measureMemory) {
+                maxMemory = Math.max(maxMemory, TestResult.getMemoryUse());
+            }
         }
+        
+        if (measureMemory) {
+            System.gc();
+        }
+
         for (Reach reach : R) {
             Good.add(new Vertex(reach.first, reach.second, k));
         }
 
-        // System.out.println("Symbol : " + word.get(word.size() - 1));
-        // System.out.print("States : ");
-        // for (Map.Entry<State, String> pair : currentStates) {
-        //     System.out.print(pair.getKey().getName() + " ");
-        // }
-        // if (stack.size() > 0)
-        //     System.out.println("\nTop Stack : " + stack.get(stack.size() - 1).toString());
-        // else
-        //     System.out.println("\nStack : empty");
-        // System.out.println("R: " + R.toString());
-        // System.out.println("K: " + K.toString());
-        // System.out.println("k: " + k);
-        // System.out.println("Good: " + Good.toString());
-        // System.out.println("\n");
+        if (debug) debug(word.get(word.size() - 1), currentStates, stack, R, K, k, Good);
 
         if (alphabet.getReturnFromCallSymbol(linkingFunction.get(startingAutomaton.getProceduralSymbol())).equals(word.get(word.size() - 1)) && 
                 stack.isEmpty() && 
                 this.startingAutomaton.getKeyGraph().Valid(K, Good)) {
-                    return true;
+                    
+                if (measureMemory) {
+                    maxMemory = Math.max(maxMemory, TestResult.getMemoryUse());
+                }
+                return new Pair<Boolean,Long>(true, maxMemory-memoryStart);
         }
         
-        return false;
+        if (measureMemory) {
+            maxMemory = Math.max(maxMemory, TestResult.getMemoryUse());
+        }
+        return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
+    }
+
+    private void debug(String symbol, Set<Map.Entry<State, String>> currentStates, 
+            List<StackElement> stack, Set<Reach> R, Set<String> K, String k, Set<Vertex> Good) {
+        System.out.println("Symbol : " + symbol);
+        System.out.print("States : ");
+        for (Map.Entry<State, String> pair : currentStates) {
+            System.out.print(pair.getKey().getName() + " ");
+        }
+        if (stack.size() > 0)
+            System.out.println("\nTop Stack : " + stack.get(stack.size() - 1).toString());
+        else
+            System.out.println("\nStack : empty");
+        System.out.println("R: " + R.toString());
+        System.out.println("K: " + K.toString());
+        System.out.println("k: " + k);
+        System.out.println("Good: " + Good.toString());
+        System.out.println("\n");
     }
 }
