@@ -13,6 +13,7 @@ import json_vspa.JSONProceduralAutomaton;
 import json_vspa.JSONVSPA;
 import vspa.VSPAAlphabet;
 import utils.SanitizeJSON;
+import java.lang.ref.WeakReference;
 
 
 public class TestResult {
@@ -887,10 +888,6 @@ public class TestResult {
             if (files != null) {
                 for (File file : files) {
                     try {
-                        if (i != 6355) {
-                            i++;
-                            continue;
-                        } 
                         System.out.println("Processing file: " + file.getName());
                         if (file.getName().contains("valid-2737")) {
                             break;
@@ -915,6 +912,9 @@ public class TestResult {
                         
                         Long memory;
                         if (!TestResult.DEBUG) {
+                            // import com.google.common.testing.GcFinalization;
+                            //  GcFinalization.awaitFullGc(); ??
+                            forceFullGc();
                             System.gc();
                             memory = automaton.accepts(json,true,TestResult.DEBUG).second;
                         }
@@ -1001,5 +1001,20 @@ public class TestResult {
 
         System.out.println("     Key Graph created in " + tot_time/test_case/1_000 + "µs and " + tot_memory/test_case + "KB of memory.");
         System.out.println("     Size of all Key Graphs " + vspa.getKeyGraphSize() + " states.");
+    }
+
+    public static void forceFullGc() {
+        Object obj = new Object();
+        WeakReference<Object> ref = new WeakReference<>(obj);
+        obj = null;
+
+        while (ref.get() != null) {
+            System.gc();
+            try {
+                Thread.sleep(50); // Laisser le temps au GC
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 }
