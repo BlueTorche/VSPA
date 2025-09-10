@@ -6,11 +6,17 @@ public class State {
     private final String name;
     private final boolean isFinal;
     private final Map<String, Set<State>> transitions = new HashMap<>();
-
+    private String proceduralSymbol;
 
     public State(String name, boolean isFinal) {
         this.name = name;
         this.isFinal = isFinal;
+    }
+
+    public State(String name, boolean isFinal, String proceduralSymbol) {
+        this.name = name;
+        this.isFinal = isFinal;
+        this.proceduralSymbol = proceduralSymbol;
     }
 
     public String getName() {
@@ -25,10 +31,20 @@ public class State {
         transitions.computeIfAbsent(symbol, _s -> new HashSet<>()).add(target);
     }
 
+    public String getProceduralSymbol() {
+        return proceduralSymbol;
+    }
+
+    public void setProceduralSymbol(String proceduralSymbol) {
+        this.proceduralSymbol = proceduralSymbol;
+    }
+
     public Set<State> getTransitions(String symbol) {
         return transitions.getOrDefault(symbol, Collections.emptySet());
     }
-    
+
+    public Set<String> getTransitionsSymbols() { return transitions.keySet(); }
+
     public Map<String, Set<State>> getAllTransitions() {
         return transitions;
     }

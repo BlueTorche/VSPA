@@ -14,4 +14,7 @@ public class Reach {
     public String toString() {
         return '(' + first.toString() + ", " + second.toString() + ')';
     }
+
+    @Override
+    public int hashCode() { return this.toString().hashCode(); }
 }

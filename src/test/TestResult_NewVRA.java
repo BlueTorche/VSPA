@@ -1,5 +1,11 @@
 package test;
 
+import automaton.State;
+import json_vra.JSON_VRA;
+import json_vspa.JSONProceduralAutomaton;
+import utils.SanitizeJSON;
+import vspa.VSPAAlphabet;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,15 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import automaton.State;
-import json_vspa.JSONProceduralAutomaton;
-import json_vspa.JSONVSPA;
-import vspa.VSPAAlphabet;
-import utils.SanitizeJSON;
-import java.lang.ref.WeakReference;
 
-
-public class TestResult {
+public class TestResult_NewVRA {
     static String[] entetes = {"Documents ID", "Automaton Time (µs)", "Automaton Memory", "Result"};
     static boolean DEBUG = true;
 
@@ -128,7 +127,7 @@ public class TestResult {
 
 
         // Definition VSPA
-        JSONVSPA vspa = new JSONVSPA();
+        JSON_VRA vspa = new JSON_VRA();
         vspa.setVSPAAlphabet(alphabet);
         vspa.addProceduralAutomaton(S0, "{");
         vspa.addProceduralAutomaton(S1, "{");
@@ -205,7 +204,7 @@ public class TestResult {
         S1.setInitialState(q0S1);
 
         // Definition VSPA
-        JSONVSPA vspa = new JSONVSPA();
+        JSON_VRA vspa = new JSON_VRA();
         vspa.setVSPAAlphabet(alphabet);
         vspa.addProceduralAutomaton(S0, "{");
         vspa.addProceduralAutomaton(S1, "[");
@@ -605,7 +604,7 @@ public class TestResult {
 
 
         // Definition VSPA
-        JSONVSPA vspa = new JSONVSPA();
+        JSON_VRA vspa = new JSON_VRA();
         vspa.setVSPAAlphabet(alphabet);
         vspa.addProceduralAutomaton(S, "{");
         vspa.addProceduralAutomaton(S0, "{");
@@ -958,7 +957,7 @@ public class TestResult {
 
 
         // Definition VSPA
-        JSONVSPA vspa = new JSONVSPA();
+        JSON_VRA vspa = new JSON_VRA();
         vspa.setVSPAAlphabet(alphabet);
         vspa.addProceduralAutomaton(S0, "{");
         vspa.addProceduralAutomaton(S1, "{");
@@ -993,7 +992,7 @@ public class TestResult {
     }
 
     
-    public static void runResult(String jsontype, JSONVSPA automaton) {
+    public static void runResult(String jsontype, JSON_VRA automaton) {
         String directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\"+ jsontype + "\\Documents\\" + jsontype + ".json\\Random";
         if (jsontype.equals("vim")) {
             directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\vim\\Documents\\vim-addon-info.json\\Random\\Done";
@@ -1022,7 +1021,7 @@ public class TestResult {
                         int test_case = 100;
                         for (int j = 0; j < test_case; j++) {
                             long time = System.nanoTime();
-                            automaton.accepts(json,false,TestResult.DEBUG);
+                            automaton.accepts(json,false, TestResult_NewVRA.DEBUG);
                             time = (System.nanoTime() - time);
                             tot_time += time;
                         }
@@ -1030,19 +1029,19 @@ public class TestResult {
                         long average_time = tot_time / test_case;
 
                         long time = System.nanoTime();
-                        boolean result = automaton.accepts(json,false,TestResult.DEBUG).first;
+                        boolean result = automaton.accepts(json,false, TestResult_NewVRA.DEBUG).first;
                         time = (System.nanoTime() - time);
                         
                         Long memory;
-                        if (!TestResult.DEBUG) {
+                        if (!TestResult_NewVRA.DEBUG) {
                             // import com.google.common.testing.GcFinalization;
                             //  GcFinalization.awaitFullGc(); ??
-                            forceFullGc();
+                            TestResult.forceFullGc();
                             System.gc();
-                            memory = automaton.accepts(json,true,TestResult.DEBUG).second;
+                            memory = automaton.accepts(json,true, TestResult_NewVRA.DEBUG).second;
                         }
                         else {
-                            memory = getMemoryUse();
+                            memory = TestResult.getMemoryUse();
                         }
 
                         System.out.println("----------------------------------------------------------------------");
@@ -1062,7 +1061,7 @@ public class TestResult {
                         System.out.println("i = " + i);
                         i++;
                         
-                        if (TestResult.DEBUG) {
+                        if (TestResult_NewVRA.DEBUG) {
                             if (i > 30) {
                                 break; 
                             }
@@ -1093,12 +1092,7 @@ public class TestResult {
         }
     }
 
-    public static long getMemoryUse() {
-        final Runtime runtime = Runtime.getRuntime();
-        return (runtime.totalMemory() - runtime.freeMemory()) / 1024;
-    }
-
-    public static void keyGraphMeasures(JSONVSPA vspa, Set<String> keySymbols) {
+    public static void keyGraphMeasures(JSON_VRA vspa, Set<String> keySymbols) {
         long tot_time = 0;
         int test_case = 10;
         for (int i = 0; i < 10; i++) {
@@ -1116,28 +1110,13 @@ public class TestResult {
         long tot_memory = 0;
         for (int i = 0; i < test_case; i++) {
             System.gc();
-            long memory = getMemoryUse();
+            long memory = TestResult.getMemoryUse();
             vspa.createKeyGraphs(keySymbols);
-            memory = getMemoryUse() - memory;
+            memory = TestResult.getMemoryUse() - memory;
             tot_memory += memory;
         }
 
         System.out.println("     Key Graph created in " + tot_time/test_case/1_000 + "µs and " + tot_memory/test_case + "KB of memory.");
         System.out.println("     Size of all Key Graphs " + vspa.getKeyGraphSize() + " states.");
-    }
-
-    public static void forceFullGc() {
-        Object obj = new Object();
-        WeakReference<Object> ref = new WeakReference<>(obj);
-        obj = null;
-
-        while (ref.get() != null) {
-            System.gc();
-            try {
-                Thread.sleep(50); // Laisser le temps au GC
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
     }
 }
