@@ -90,8 +90,7 @@ public class TestResult {
         q15S0.addTransition("\"array\"", q16S0);
         q16S0.addTransition("S2", q17S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
 
         // Procedural Automaton A^S1
@@ -106,8 +105,7 @@ public class TestResult {
         q1S1.addTransition("true", q2S1);
         q1S1.addTransition("false", q2S1);
 
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
 
 
         // Procedural Automaton A^S2
@@ -123,8 +121,7 @@ public class TestResult {
         q3S2.addTransition("#", q4S2);
         q4S2.addTransition("\"\\\\S\"", q3S2);
 
-        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2");
-        S2.setInitialState(q0S2);
+        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q0S2);
 
 
         // Definition VSPA
@@ -191,8 +188,7 @@ public class TestResult {
         q3S0.addTransition("\"children\"", q4S0);
         q4S0.addTransition("S1", q5S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
 
         // Procedural Automaton A^S1
@@ -201,8 +197,7 @@ public class TestResult {
 
         q0S1.addTransition("S0", q1S1);
 
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
 
         // Definition VSPA
         JSONVSPA vspa = new JSONVSPA();
@@ -269,8 +264,7 @@ public class TestResult {
         State q1S = new State("q1S", true);
         q0S.addTransition("S0", q1S);
 
-        JSONProceduralAutomaton S = new JSONProceduralAutomaton("S");
-        S.setInitialState(q0S);
+        JSONProceduralAutomaton S = new JSONProceduralAutomaton("S", q0S);
 
         // Procedural Automaton A^S0
         // S0 -> {(eps + "name"S)(eps + #"ver."S)(eps + #"desc."S)(eps + #"hp"S)(eps + #"auth"S)
@@ -418,8 +412,7 @@ public class TestResult {
         q25S0.addTransition("\"\\\\S\"", q26S0);
         q25S0.addTransition("\"\\\\E\"", q26S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
         // Procedural Automaton A^S1  --> SelfRepository
         // SelfRepo -> {(eps + "type"E#"url"S)(eps + #"dep"S)(eps + # S U)}
@@ -458,9 +451,8 @@ public class TestResult {
         q10S1.addTransition("\"\\\\S\"", q11S1);
         q10S1.addTransition("\"\\\\E\"", q11S1);
         
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
-        
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
+
 
         // Procedural Automaton A^S2 --> dependencies
         // S2 -> { eps + S S3}
@@ -470,8 +462,7 @@ public class TestResult {
         State q2S2 = new State("q2S2", true);
         q1S2.addTransition("S3", q2S2);
         
-        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2");
-        S2.setInitialState(q0S2);
+        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q0S2);
 
 
         // Procedural Automaton A^S3  --> OtherRepository
@@ -548,8 +539,7 @@ public class TestResult {
         State q20S3 = new State("q20S3", true);
         q19S3.addTransition("\"\\\\E\"", q20S3);
 
-        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3");
-        S3.setInitialState(q0S3);
+        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3", q0S3);
 
         
 
@@ -569,8 +559,7 @@ public class TestResult {
         q1Uo.addTransition("\"\\\\S\"", q2Uo);
         q1Uo.addTransition("\"\\\\E\"", q2Uo);
 
-        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo");
-        Uo.setInitialState(q0Uo);
+        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo", q0Uo);
 
         
         // Procedural Automaton A^Uo  --> Universal Object
@@ -600,8 +589,7 @@ public class TestResult {
         q2Ua.addTransition("\"\\\\S\"", q1Ua);
         q2Ua.addTransition("\"\\\\E\"", q1Ua);
 
-        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua");
-        Ua.setInitialState(q0Ua);
+        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua", q0Ua);
 
 
         // Definition VSPA
@@ -689,8 +677,7 @@ public class TestResult {
         State q5S0 = new State("q5S0", true);
         q4S0.addTransition("S1", q5S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
         // Procedural Automaton A^S1  --> SelfRepository
         State q0S1 = new State("q0S1", false);
@@ -705,8 +692,7 @@ public class TestResult {
         State q5S1 = new State("q5S1", true);
         q4S1.addTransition("S3", q5S1);
         
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
         
 
         // // Procedural Automaton A^S2 --> dependencies
@@ -774,8 +760,7 @@ public class TestResult {
         // q16S2.addTransition("\"\\\\S\"", q17S2);
         // q16S2.addTransition("\"\\\\E\"", q17S2);
 
-        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3");
-        S3.setInitialState(q0S3);
+        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3", q0S3);
 
         
         // Procedural Automaton A^S4  --> MatchCondition
@@ -791,8 +776,7 @@ public class TestResult {
         State q5S4 = new State("q5S4", true);
         q4S4.addTransition("\"\\\\S\"", q5S4);
 
-        JSONProceduralAutomaton S4 = new JSONProceduralAutomaton("S4");
-        S4.setInitialState(q0S4);
+        JSONProceduralAutomaton S4 = new JSONProceduralAutomaton("S4", q0S4);
 
         // Procedural Automaton A^S5  --> RequestOverrides
         State q0S5 = new State("q0S5", false);
@@ -834,8 +818,7 @@ public class TestResult {
         State q14S5 = new State("q14S5", true);
         q13S5.addTransition("\"\\\\S\"", q14S5);
         
-        JSONProceduralAutomaton S5 = new JSONProceduralAutomaton("S5");
-        S5.setInitialState(q0S5);
+        JSONProceduralAutomaton S5 = new JSONProceduralAutomaton("S5", q0S5);
 
         // Procedural Automaton A^S6  --> ResponseOverrides
         State q0S6 = new State("q0S6", false);
@@ -870,8 +853,7 @@ public class TestResult {
         State q14S6 = new State("q14S6", true);
         q13S6.addTransition("\"\\\\S\"", q14S6);
 
-        JSONProceduralAutomaton S6 = new JSONProceduralAutomaton("S6");
-        S6.setInitialState(q0S6);
+        JSONProceduralAutomaton S6 = new JSONProceduralAutomaton("S6", q0S6);
 
         // Procedural Automaton A^S7  --> Methods
         State q0S7 = new State("q0S7", false);
@@ -881,8 +863,7 @@ public class TestResult {
         q1S7.addTransition("#", q2S7);
         q2S7.addTransition("\"\\\\E\"", q1S7);
 
-        JSONProceduralAutomaton S7 = new JSONProceduralAutomaton("S7");
-        S7.setInitialState(q0S7);
+        JSONProceduralAutomaton S7 = new JSONProceduralAutomaton("S7", q0S7);
 
         // Procedural Automaton A^S8  --> desc
         State q0S8 = new State("q0S8", true);
@@ -892,8 +873,7 @@ public class TestResult {
         q1S8.addTransition("#", q2S8);
         q2S8.addTransition("\"\\\\S\"", q1S8);
 
-        JSONProceduralAutomaton S8 = new JSONProceduralAutomaton("S8");
-        S8.setInitialState(q0S8);
+        JSONProceduralAutomaton S8 = new JSONProceduralAutomaton("S8", q0S8);
 
         // Procedural Automaton A^S9  --> ResponseBody
         State q0S9 = new State("q0S9", false);
@@ -903,8 +883,7 @@ public class TestResult {
         q1S9.addTransition("#", q2S9);
         q2S9.addTransition("Uo", q1S9);
 
-        JSONProceduralAutomaton S9 = new JSONProceduralAutomaton("S9");
-        S9.setInitialState(q0S9);
+        JSONProceduralAutomaton S9 = new JSONProceduralAutomaton("S9", q0S9);
 
 
         // Procedural Automaton A^Uo  --> Universal Object
@@ -923,8 +902,7 @@ public class TestResult {
         q1Uo.addTransition("\"\\\\S\"", q2Uo);
         q1Uo.addTransition("\"\\\\E\"", q2Uo);
 
-        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo");
-        Uo.setInitialState(q0Uo);
+        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo", q0Uo);
 
         
         // Procedural Automaton A^Uo  --> Universal Object
@@ -953,8 +931,7 @@ public class TestResult {
         q2Ua.addTransition("\"\\\\S\"", q1Ua);
         q2Ua.addTransition("\"\\\\E\"", q1Ua);
 
-        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua");
-        Ua.setInitialState(q0Ua);
+        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua", q0Ua);
 
 
         // Definition VSPA
@@ -996,7 +973,7 @@ public class TestResult {
     public static void runResult(String jsontype, JSONVSPA automaton) {
         String directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\"+ jsontype + "\\Documents\\" + jsontype + ".json\\Random";
         if (jsontype.equals("vim")) {
-            directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\vim\\Documents\\vim-addon-info.json\\Random\\Done";
+            directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\vim\\Documents\\vim-addon-info.json\\Random";
         }
         if (jsontype.equals("proxies")) {
             directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\"+ jsontype + "\\Documents\\"+ jsontype +".json\\Random\\all";
@@ -1029,9 +1006,7 @@ public class TestResult {
 
                         long average_time = tot_time / test_case;
 
-                        long time = System.nanoTime();
                         boolean result = automaton.accepts(json,false,TestResult.DEBUG).first;
-                        time = (System.nanoTime() - time);
                         
                         Long memory;
                         if (!TestResult.DEBUG) {
@@ -1054,7 +1029,7 @@ public class TestResult {
                         
                         List<String> data = new ArrayList<>();
                         data.add(file.getName());
-                        data.add(String.valueOf((int) time/1_000));
+                        data.add(String.valueOf((int) average_time/1_000));
                         data.add(String.valueOf(memory));
                         data.add(String.valueOf(result));
                         datas.add(data);

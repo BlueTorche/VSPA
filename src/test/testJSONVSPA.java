@@ -51,8 +51,7 @@ public class testJSONVSPA {
         q20.addTransition("e", q28);
         q28.addTransition("i", q29);
 
-        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2");
-        S2.setInitialState(q20);
+        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q20);
 
         S2.createKeyGraph(keys);
         KeyGraph keyGraph0 = S2.getKeyGraph();
@@ -89,8 +88,7 @@ public class testJSONVSPA {
         q06.addTransition("c", q07);
         q07.addTransition("S2", q08);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q00);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q00);
     
         S0.createKeyGraph(keys);
         KeyGraph keyGraph = S0.getKeyGraph();
@@ -142,8 +140,7 @@ public class testJSONVSPA {
         q06.addTransition("c", q07);
         q07.addTransition("S2", q08);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q00);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q00);
 
 
         // Procedural Automaton A^S1
@@ -155,8 +152,7 @@ public class testJSONVSPA {
         q11.addTransition("#", q12);
         q12.addTransition("s", q11);
 
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q10);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q10);
 
 
         // Procedural Automaton A^S2
@@ -183,8 +179,7 @@ public class testJSONVSPA {
         q20.addTransition("e", q28);
         q28.addTransition("i", q29);
 
-        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2");
-        S2.setInitialState(q20);
+        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q20);
 
 
         // Definition VSPA

@@ -54,13 +54,13 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
         }
 
         List<StackElement> stack = new ArrayList<>();
-        Set<Reach> reach = new HashSet<>();
-        reach.add(new Reach(startingAutomaton.getInitalState(), startingAutomaton.getInitalState()));
+        Map<State, Set<State>> reach = new HashMap<>();
+        reach.computeIfAbsent(startingAutomaton.getInitalState(), _ -> new HashSet<>()).add(startingAutomaton.getInitalState());
         Set<String> K = new HashSet<>();
         String k = "";
         Set<Vertex> Good = new HashSet<>();
 
-        for (int i = 1; i < word.size() - 1 ; i++) {
+        for (int i = 0; i < word.size() ; i++) {
             if (measureMemory) {
                 System.gc();
             }
@@ -68,48 +68,25 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
             String symbol = word.get(i);
             if (debug) debug(symbol, stack, reach, K, k, Good);
 
-            Set<Reach> nextR = new HashSet<>();
+            Map<State, Set<State>> nextR = new HashMap<>();
 
-            if (symbol.equals("[")) {
-                stack.add(new StackElement(reach, K, k, Good));
-                for (Reach r : reach) {
-                    State state = r.second;
-                    for (String procSymbol : state.getTransitionsSymbols()) {
-                        if (linkingFunction.containsKey(procSymbol) && linkingFunction.get(procSymbol).equals(symbol)) {
-                            nextR.add(new Reach(proceduralAutomata.get(procSymbol).getInitalState(), proceduralAutomata.get(procSymbol).getInitalState()));
-                        }
-                    }
-                }
-            }
-
-            else if (symbol.equals("{")) {
+            if (symbol.equals("[") || symbol.equals("{")) {
                 String nextSymbol = word.get(i + 1);
                 stack.add(new StackElement(reach, K, k, Good));
                 K = new HashSet<>();
                 Good = new HashSet<>();
-
-                if (nextSymbol.equals("}")) {
-                    for (Reach r : reach) {
-                        State state = r.second;
-                        for (String procSymbol : state.getTransitionsSymbols()) {
-                            if (linkingFunction.containsKey(procSymbol) && linkingFunction.get(procSymbol).equals(symbol)) {
-                                nextR.add(new Reach(proceduralAutomata.get(procSymbol).getInitalState(), proceduralAutomata.get(procSymbol).getInitalState()));
-                            }
-                        }
-                    }
-                }
-                else {
-                    K.add(nextSymbol);
-                    k = nextSymbol;
-
-                    for (Reach r : reach) {
-                        State state = r.second;
-                        for (String procSymbol : state.getTransitionsSymbols()) {
-                            if (linkingFunction.containsKey(procSymbol) && linkingFunction.get(procSymbol).equals(symbol)) {
-                                JSONProceduralAutomaton pa = proceduralAutomata.get(procSymbol);
+                k = nextSymbol;
+                for (State state : reach.keySet()) {
+                    for (String procSymbol : state.getTransitionsSymbols()) {
+                        if (linkingFunction.containsKey(procSymbol) && linkingFunction.get(procSymbol).equals(symbol)) {
+                            JSONProceduralAutomaton pa = proceduralAutomata.get(procSymbol);
+                            if (symbol.equals("{") && !nextSymbol.equals("}")) {
+                                K.add(nextSymbol);
                                 for (Vertex vertex : pa.getKeyGraph().getVerticesByKey(nextSymbol)) {
-                                    nextR.add(new Reach(vertex.startState, vertex.startState));
+                                    nextR.computeIfAbsent(vertex.startState, _ -> new HashSet<>()).add(vertex.startState);
                                 }
+                            } else {
+                                nextR.computeIfAbsent(pa.getInitalState(), _ -> new HashSet<>()).add(pa.getInitalState());
                             }
                         }
                     }
@@ -117,84 +94,65 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
             }
 
             else if ((alphabet.getInternalSymbols().contains(symbol) && !symbol.equals("#")) ||
-                    (symbol.equals("#") && reach.isEmpty())) {
+                    (symbol.equals("#") && K.isEmpty())) {
 
-                for (Reach r : reach) {
-                    for (State q : r.second.getTransitions(symbol))
-                        nextR.add(new Reach(r.first, q));
+                for (State end_state : reach.keySet()) {
+                    for (State q : end_state.getTransitions(symbol)) {
+                        nextR.computeIfAbsent(q, _ -> new HashSet<>()).addAll(reach.get(end_state));
+                    }
                 }
             }
 
             else if (symbol.equals("#")) {
-                for (Reach r : reach) {
-                    Good.add(new Vertex(r.first, r.second, k));
-                }
                 String nextSymbol = word.get(i + 1);
+                for (State end_state : reach.keySet()) {
+                    for (State start_state : reach.get(end_state))
+                        Good.add(new Vertex(start_state, end_state, k));
+
+                    String procSymbol = end_state.getProceduralSymbol();
+                    for (Vertex vertex : proceduralAutomata.get(procSymbol).getKeyGraph().getVerticesByKey(nextSymbol)) {
+                        nextR.computeIfAbsent(vertex.startState, _ -> new HashSet<>()).add(vertex.startState);
+                    }
+                }
+
                 K.add(nextSymbol);
                 k = nextSymbol;
-
-                for (Reach r : reach) {
-                    State state = r.second;
-                    String procSymbol = state.getProceduralSymbol();
-                    for (Vertex vertex : proceduralAutomata.get(procSymbol).getKeyGraph().getVerticesByKey(nextSymbol)) {
-                        nextR.add(new Reach(vertex.startState, vertex.startState));
-                    }
-                }
             }
 
-            else if (symbol.equals("]") || (symbol.equals("}") && reach.isEmpty())) {
-                if (stack.isEmpty()) return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
+            else if (symbol.equals("]") || (symbol.equals("}"))) {
+                if (stack.isEmpty()) return new Pair<>(false, maxMemory-memoryStart);
 
                 Set<String> finalSymbols = new HashSet<>();
-                for (Reach r : reach) {
-                    State state = r.second;
-                    if (state.isFinal() && alphabet.getReturnFromCallSymbol(linkingFunction.get(state.getProceduralSymbol())).equals(symbol)) {
-                        finalSymbols.add(state.getProceduralSymbol());
+                if (K.isEmpty()) {
+                    for (State state : reach.keySet()) {
+                        if (state.isFinal() && alphabet.getReturnFromCallSymbol(linkingFunction.get(state.getProceduralSymbol())).equals(symbol)) {
+                            finalSymbols.add(state.getProceduralSymbol());
+                        }
                     }
-                }
-
-                StackElement stackElement = stack.removeLast();
-                K = stackElement.K;
-                k = stackElement.k;
-                Good = stackElement.Good;
-                reach = stackElement.R;
-
-                for (String procSymbol : finalSymbols) {
-                    for (Reach r : reach) {
-                        for (State q : r.second.getTransitions(procSymbol)) {
-                                nextR.add(new Reach(r.first, r.second));
+                } else {
+                    for (State end_state : reach.keySet()) {
+                        for (State start_state : reach.get(end_state))
+                            Good.add(new Vertex(start_state, end_state, k));
+                    }
+                    for (State state : reach.keySet()) {
+                        String procSymbol = state.getProceduralSymbol();
+                        JSONProceduralAutomaton pa = proceduralAutomata.get(procSymbol);
+                        if (pa.getKeyGraph() != null && pa.getKeyGraph().Valid(K, Good)) {
+                            finalSymbols.add(procSymbol);
                         }
                     }
                 }
-            }
-
-            else if (symbol.equals("}")) {
-                if (stack.isEmpty()) return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
-
-                for (Reach r : reach) {
-                    Good.add(new Vertex(r.first, r.second, k));
-                }
-
-                // Recuperation of active procedural automata
-                Set<String> finalSymbols = new HashSet<>();
-                for (Reach r : reach) {
-                    String procSymbol = r.second.getProceduralSymbol();
-                    JSONProceduralAutomaton pa = proceduralAutomata.get(procSymbol);
-                    if (pa.getKeyGraph() != null && pa.getKeyGraph().Valid(K, Good)) {
-                        finalSymbols.add(procSymbol);
-                    }
-                }
 
                 StackElement stackElement = stack.removeLast();
-                reach = stackElement.R;
-                k = stackElement.k;
                 K = stackElement.K;
+                k = stackElement.k;
                 Good = stackElement.Good;
+                reach = stackElement.R;
 
                 for (String procSymbol : finalSymbols) {
-                    for (Reach r : reach) {
-                        for (State q : r.second.getTransitions(procSymbol)) {
-                            nextR.add(new Reach(r.first, q));
+                    for (State end_state : reach.keySet()) {
+                        for (State q : end_state.getTransitions(procSymbol)) {
+                            nextR.computeIfAbsent(q, _ -> new HashSet<>()).addAll(reach.get(end_state));
                         }
                     }
                 }
@@ -207,7 +165,7 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
             }
 
             if (reach.isEmpty()) {
-                return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
+                return new Pair<>(false, maxMemory-memoryStart);
             }
         }
 
@@ -216,8 +174,8 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
         }
 
         boolean isAccepted = false;
-        for (Reach r : reach) {
-            isAccepted = r.second.isFinal() || isAccepted;
+        for (State state : reach.keySet()) {
+            isAccepted = state.isFinal() || isAccepted;
         }
 
         if (measureMemory) {
@@ -227,7 +185,7 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
         return new Pair<Boolean,Long>(isAccepted, maxMemory-memoryStart);
     }
 
-    private void debug(String symbol, List<StackElement> stack, Set<Reach> R, Set<String> K, String k, Set<Vertex> Good) {
+    private void debug(String symbol, List<StackElement> stack, Map<State, Set<State>> R, Set<String> K, String k, Set<Vertex> Good) {
         System.out.println("Symbol : " + symbol);
         System.out.println("\nReach: " + R.toString());
         if (!stack.isEmpty())

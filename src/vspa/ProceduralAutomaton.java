@@ -11,8 +11,10 @@ import java.util.Set;
 public class ProceduralAutomaton extends FiniteAutomaton {
     private final String proceduralSymbol;
 
-    public ProceduralAutomaton(String proceduralSymbol) {
+    public ProceduralAutomaton(String proceduralSymbol, State initialState) {
+        super(initialState);
         this.proceduralSymbol = proceduralSymbol;
+        fillProceduralSymbols();
     }
 
     public String getProceduralSymbol() {
@@ -27,6 +29,7 @@ public class ProceduralAutomaton extends FiniteAutomaton {
         while (!toVisit.isEmpty()) {
             s = toVisit.removeLast();
             if (visited.contains(s)) continue;
+            System.out.println(s);
             s.setProceduralSymbol(proceduralSymbol);
             visited.add(s);
             for (Set<State> states : s.getAllTransitions().values()) {

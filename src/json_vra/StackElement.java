@@ -1,6 +1,5 @@
 package json_vra;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,12 +8,12 @@ import json_vspa.Reach;
 import json_vspa.Vertex;
 
 public class StackElement {
-    public Set<Reach> R = new HashSet<>();
-    public Set<String> K = new HashSet<>();
+    public Map<State, Set<State>> R;
+    public Set<String> K ;
     public String k;
-    public Set<Vertex> Good = new HashSet<>();
+    public Set<Vertex> Good;
 
-    public StackElement(Set<Reach> R, Set<String> K, String k, Set<Vertex> Good) {
+    public StackElement(Map<State, Set<State>> R, Set<String> K, String k, Set<Vertex> Good) {
         this.R = R;
         this.K = K;
         this.k = k;

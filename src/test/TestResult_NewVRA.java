@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class TestResult_NewVRA {
     static String[] entetes = {"Documents ID", "Automaton Time (µs)", "Automaton Memory", "Result"};
-    static boolean DEBUG = true;
+    static boolean DEBUG = false;
 
     public static void main(String[] args) {
         // basicTypes();
@@ -89,8 +89,7 @@ public class TestResult_NewVRA {
         q15S0.addTransition("\"array\"", q16S0);
         q16S0.addTransition("S2", q17S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
 
         // Procedural Automaton A^S1
@@ -105,8 +104,7 @@ public class TestResult_NewVRA {
         q1S1.addTransition("true", q2S1);
         q1S1.addTransition("false", q2S1);
 
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
 
 
         // Procedural Automaton A^S2
@@ -122,8 +120,7 @@ public class TestResult_NewVRA {
         q3S2.addTransition("#", q4S2);
         q4S2.addTransition("\"\\\\S\"", q3S2);
 
-        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2");
-        S2.setInitialState(q0S2);
+        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q0S2);
 
 
         // Definition VSPA
@@ -190,8 +187,7 @@ public class TestResult_NewVRA {
         q3S0.addTransition("\"children\"", q4S0);
         q4S0.addTransition("S1", q5S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
 
         // Procedural Automaton A^S1
@@ -200,8 +196,7 @@ public class TestResult_NewVRA {
 
         q0S1.addTransition("S0", q1S1);
 
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
 
         // Definition VSPA
         JSON_VRA vspa = new JSON_VRA();
@@ -246,7 +241,6 @@ public class TestResult_NewVRA {
         keySymbols.add("\"deprecated\"");
         keySymbols.add("\"vim_script_nr\"");
         keySymbols.add("\"script-type\"");
-        keySymbols.add("\"addon-info\"");
         keySymbols.add("\"\\\\S\"");
 
         VSPAAlphabet alphabet = new VSPAAlphabet();
@@ -268,98 +262,61 @@ public class TestResult_NewVRA {
         State q1S = new State("q1S", true);
         q0S.addTransition("S0", q1S);
 
-        JSONProceduralAutomaton S = new JSONProceduralAutomaton("S");
-        S.setInitialState(q0S);
+        JSONProceduralAutomaton S = new JSONProceduralAutomaton("S", q0S);
 
         // Procedural Automaton A^S0
         // S0 -> {(eps + "name"S)(eps + #"ver."S)(eps + #"desc."S)(eps + #"hp"S)(eps + #"auth"S)
         //              (eps + #"maint."S)(eps + #"repo"S1)(eps + #"selfRepo"S2)(eps + # S U)}
-        State q0S0 = new State("q0S0", true);
+        State q0S0 = new State("q0S0", false);
         State q1S0 = new State("q1S0", false);
         q0S0.addTransition("\"name\"", q1S0);
-        State q2S0 = new State("q2S0", true);
+        State q2S0 = new State("q2S0", false);
         q1S0.addTransition("\"\\\\S\"", q2S0);
         State q3S0 = new State("q3S0", false);
         q2S0.addTransition("#", q3S0);
         State q4S0 = new State("q4S0", false);
-        q0S0.addTransition("\"version\"", q4S0);
         q3S0.addTransition("\"version\"", q4S0);
-        State q5S0 = new State("q5S0", true);
+        State q5S0 = new State("q5S0", false);
         q4S0.addTransition("\"\\\\S\"", q5S0);
         State q6S0 = new State("q6S0", false);
         q5S0.addTransition("#", q6S0);
         State q7S0 = new State("q7S0", false);
-        q0S0.addTransition("\"description\"", q7S0);
-        q3S0.addTransition("\"description\"", q7S0);
         q6S0.addTransition("\"description\"", q7S0);
-        State q8S0 = new State("q8S0", true);
+        State q8S0 = new State("q8S0", false);
         q7S0.addTransition("\"\\\\S\"", q8S0);
         State q9S0 = new State("q9S0", false);
         q8S0.addTransition("#", q9S0);
         State q10S0 = new State("q10S0", false);
-        q0S0.addTransition("\"homepage\"", q10S0);
-        q3S0.addTransition("\"homepage\"", q10S0);
-        q6S0.addTransition("\"homepage\"", q10S0);
         q9S0.addTransition("\"homepage\"", q10S0);
-        State q11S0 = new State("q11S0", true);
+        State q11S0 = new State("q11S0", false);
         q10S0.addTransition("\"\\\\S\"", q11S0);
         State q12S0 = new State("q12S0", false);
         q11S0.addTransition("#", q12S0);
         State q13S0 = new State("q13S0", false);
-        q0S0.addTransition("\"author\"", q13S0);
-        q3S0.addTransition("\"author\"", q13S0);
-        q6S0.addTransition("\"author\"", q13S0);
-        q9S0.addTransition("\"author\"", q13S0);
         q12S0.addTransition("\"author\"", q13S0);
-        State q14S0 = new State("q14S0", true);
+        State q14S0 = new State("q14S0", false);
         q13S0.addTransition("\"\\\\S\"", q14S0);
         State q15S0 = new State("q15S0", false);
         q14S0.addTransition("#", q15S0);
         State q16S0 = new State("q16S0", false);
-        q0S0.addTransition("\"maintainer\"", q16S0);
-        q3S0.addTransition("\"maintainer\"", q16S0);
-        q6S0.addTransition("\"maintainer\"", q16S0);
-        q9S0.addTransition("\"maintainer\"", q16S0);
-        q12S0.addTransition("\"maintainer\"", q16S0);
         q15S0.addTransition("\"maintainer\"", q16S0);
-        State q17S0 = new State("q17S0", true);
+        State q17S0 = new State("q17S0", false);
         q16S0.addTransition("\"\\\\S\"", q17S0);
         State q18S0 = new State("q18S0", false);
         q17S0.addTransition("#", q18S0);
         State q19S0 = new State("q19S0", false);
-        q0S0.addTransition("\"repository\"", q19S0);
-        q3S0.addTransition("\"repository\"", q19S0);
-        q6S0.addTransition("\"repository\"", q19S0);
-        q9S0.addTransition("\"repository\"", q19S0);
-        q12S0.addTransition("\"repository\"", q19S0);
-        q15S0.addTransition("\"repository\"", q19S0);
         q18S0.addTransition("\"repository\"", q19S0);
-        State q20S0 = new State("q20S0", true);
+        State q20S0 = new State("q20S0", false);
         q19S0.addTransition("S1", q20S0);
         State q21S0 = new State("q21S0", false);
         q20S0.addTransition("#", q21S0);
         State q22S0 = new State("q22S0", false);
-        q0S0.addTransition("\"dependencies\"", q22S0);
-        q3S0.addTransition("\"dependencies\"", q22S0);
-        q6S0.addTransition("\"dependencies\"", q22S0);
-        q9S0.addTransition("\"dependencies\"", q22S0);
-        q12S0.addTransition("\"dependencies\"", q22S0);
-        q15S0.addTransition("\"dependencies\"", q22S0);
-        q18S0.addTransition("\"dependencies\"", q22S0);
         q21S0.addTransition("\"dependencies\"", q22S0);
         State q23S0 = new State("q23S0", true);
         q22S0.addTransition("S2", q23S0);
         State q24S0 = new State("q24S0", false);
         q23S0.addTransition("#", q24S0);
         State q25S0 = new State("q25S0", false);
-        q0S0.addTransition("\"\\\\S\"", q25S0);
-        q3S0.addTransition("\"\\\\S\"", q25S0);
-        q6S0.addTransition("\"\\\\S\"", q25S0);
-        q9S0.addTransition("\"\\\\S\"", q25S0);
-        q12S0.addTransition("\"\\\\S\"", q25S0);
-        q15S0.addTransition("\"\\\\S\"", q25S0);
-        q18S0.addTransition("\"\\\\S\"", q25S0);
-        q21S0.addTransition("\"\\\\S\"", q25S0);
         q24S0.addTransition("\"\\\\S\"", q25S0);
         /*q0S0.addTransition("\"type\"", q25S0);
         q3S0.addTransition("\"type\"", q25S0);
@@ -417,8 +374,7 @@ public class TestResult_NewVRA {
         q25S0.addTransition("\"\\\\S\"", q26S0);
         q25S0.addTransition("\"\\\\E\"", q26S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
         // Procedural Automaton A^S1  --> SelfRepository
         // SelfRepo -> {(eps + "type"E#"url"S)(eps + #"dep"S)(eps + # S U)}
@@ -431,20 +387,17 @@ public class TestResult_NewVRA {
         q2S1.addTransition("#", q3S1);
         State q4S1 = new State("q4S1", false);
         q3S1.addTransition("\"url\"", q4S1);
-        State q5S1 = new State("q5S1", true);
+        State q5S1 = new State("q5S1", false);
         q4S1.addTransition("\"\\\\S\"", q5S1);
         State q6S1 = new State("q6S1", false);
         q5S1.addTransition("#", q6S1);
         State q7S1 = new State("q7S1", false);
-        q0S1.addTransition("\"deprecated\"", q7S1);
         q6S1.addTransition("\"deprecated\"", q7S1);
         State q8S1 = new State("q8S1", true);
         q7S1.addTransition("\"\\\\S\"", q8S1);
         State q9S1 = new State("q9S1", false);
         q8S1.addTransition("#", q9S1);
         State q10S1 = new State("q10S1", false);
-        q0S1.addTransition("\"\\\\S\"", q10S1);
-        q6S1.addTransition("\"\\\\S\"", q10S1);
         q9S1.addTransition("\"\\\\S\"", q10S1);
         State q11S1 = new State("q11S1", true);
         q10S1.addTransition("Uo", q11S1);
@@ -457,8 +410,7 @@ public class TestResult_NewVRA {
         q10S1.addTransition("\"\\\\S\"", q11S1);
         q10S1.addTransition("\"\\\\E\"", q11S1);
         
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
         
 
         // Procedural Automaton A^S2 --> dependencies
@@ -469,59 +421,69 @@ public class TestResult_NewVRA {
         State q2S2 = new State("q2S2", true);
         q1S2.addTransition("S3", q2S2);
         
-        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2");
-        S2.setInitialState(q0S2);
+        JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q0S2);
 
 
         // Procedural Automaton A^S3  --> OtherRepository
         // S3 -> {(eps + "hp"S)(eps + #"ai"S0)(eps + #"type"E)(eps + #"url"S)
         //          (eps + #"vsn"D)(eps + "st"E)(eps + S U)}
-        State q0S3 = new State("q0S3", true);
+        State q0S3 = new State("q0S3", false);
         State q1S3 = new State("q1S3", false);
         q0S3.addTransition("\"homepage\"", q1S3);
-        State q2S3 = new State("q2S3", true);
+        State q2S3 = new State("q2S3", false);
         q1S3.addTransition("\"\\\\S\"", q2S3);
         State q3S3 = new State("q3S3", false);
         q2S3.addTransition("#", q3S3);
-        State q4S3 = new State("q4S3", false);
+       /* State q4S3 = new State("q4S3", false);
         q0S3.addTransition("\"addon-info\"", q4S3);
         q3S3.addTransition("\"addon-info\"", q4S3);
         State q5S3 = new State("q5S3", true);
         q4S3.addTransition("S0", q5S3);
         State q6S3 = new State("q6S3", false);
-        q5S3.addTransition("#", q6S3);
+        q5S3.addTransition("#", q6S3);*/
         State q7S3 = new State("q7S3", false);
-        q0S3.addTransition("\"url\"", q7S3);
         q3S3.addTransition("\"url\"", q7S3);
-        q6S3.addTransition("\"url\"", q7S3);
-        State q8S3 = new State("q8S3", true);
+        State q8S3 = new State("q8S3", false);
         q7S3.addTransition("\"\\\\S\"", q8S3);
         State q9S3 = new State("q9S3", false);
         q8S3.addTransition("#", q9S3);
+        State q9S3prime = new State("q9S3prime", false);
+        q9S3.addTransition("\"type\"", q9S3prime);
+        State q10S3prime = new State("q10S3prime", true);
+        q9S3prime.addTransition("\"\\\\E\"", q10S3prime);
+        State q11S3prime = new State("q11S3prime", false);
+        q10S3prime.addTransition("#", q11S3prime);
         State q10S3 = new State("q10S3", false);
-        q0S3.addTransition("\"vim_script_nr\"", q10S3);
-        q3S3.addTransition("\"vim_script_nr\"", q10S3);
-        q6S3.addTransition("\"vim_script_nr\"", q10S3);
-        q9S3.addTransition("\"vim_script_nr\"", q10S3);
+        q11S3prime.addTransition("\"vim_script_nr\"", q10S3);
         State q11S3 = new State("q11S3", true);
+        q10S3.addTransition("Uo", q11S3);
+        q10S3.addTransition("Ua", q11S3);
+        q10S3.addTransition("null", q11S3);
+        q10S3.addTransition("true", q11S3);
+        q10S3.addTransition("false", q11S3);
+        q10S3.addTransition("\"\\\\I\"", q11S3);
         q10S3.addTransition("\"\\\\D\"", q11S3);
+        q10S3.addTransition("\"\\\\S\"", q11S3);
+        q10S3.addTransition("\"\\\\E\"", q11S3);
         State q12S3 = new State("q12S3", false);
         q11S3.addTransition("#", q12S3);
         State q13S3 = new State("q13S3", false);
-        q0S3.addTransition("\"script-type\"", q13S3);
-        q3S3.addTransition("\"script-type\"", q13S3);
-        q6S3.addTransition("\"script-type\"", q13S3);
-        q9S3.addTransition("\"script-type\"", q13S3);
         q12S3.addTransition("\"script-type\"", q13S3);
+        q11S3prime.addTransition("\"script-type\"", q13S3);
         State q14S3 = new State("q14S3", true);
+        q13S3.addTransition("Uo", q14S3);
+        q13S3.addTransition("Ua", q14S3);
+        q13S3.addTransition("null", q14S3);
+        q13S3.addTransition("true", q14S3);
+        q13S3.addTransition("false", q14S3);
+        q13S3.addTransition("\"\\\\I\"", q14S3);
+        q13S3.addTransition("\"\\\\D\"", q14S3);
+        q13S3.addTransition("\"\\\\S\"", q14S3);
         q13S3.addTransition("\"\\\\E\"", q14S3);
         State q15S3 = new State("q15S3", false);
         q14S3.addTransition("#", q15S3);
         State q16S3 = new State("q16S3", false);
-        q0S3.addTransition("\"\\\\S\"", q16S3);
-        q3S3.addTransition("\"\\\\S\"", q16S3);
-        q6S3.addTransition("\"\\\\S\"", q16S3);
-        q9S3.addTransition("\"\\\\S\"", q16S3);
+        q11S3prime.addTransition("\"\\\\S\"", q16S3);
         q12S3.addTransition("\"\\\\S\"", q16S3);
         q15S3.addTransition("\"\\\\S\"", q16S3);
         State q17S3 = new State("q17S3", true);
@@ -534,21 +496,8 @@ public class TestResult_NewVRA {
         q16S3.addTransition("\"\\\\D\"", q17S3);
         q16S3.addTransition("\"\\\\S\"", q17S3);
         q16S3.addTransition("\"\\\\E\"", q17S3);
-        State q18S3 = new State("q18S3", false);
-        q17S3.addTransition("#", q18S3);
-        State q19S3 = new State("q19S3", false);
-        q0S3.addTransition("\"type\"", q19S3);
-        q3S3.addTransition("\"type\"", q19S3);
-        q6S3.addTransition("\"type\"", q19S3);
-        q9S3.addTransition("\"type\"", q19S3);
-        q12S3.addTransition("\"type\"", q19S3);
-        q15S3.addTransition("\"type\"", q19S3);
-        q18S3.addTransition("\"type\"", q19S3);
-        State q20S3 = new State("q20S3", true);
-        q19S3.addTransition("\"\\\\E\"", q20S3);
 
-        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3");
-        S3.setInitialState(q0S3);
+        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3", q0S3);
 
         
 
@@ -568,8 +517,7 @@ public class TestResult_NewVRA {
         q1Uo.addTransition("\"\\\\S\"", q2Uo);
         q1Uo.addTransition("\"\\\\E\"", q2Uo);
 
-        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo");
-        Uo.setInitialState(q0Uo);
+        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo", q0Uo);
 
         
         // Procedural Automaton A^Uo  --> Universal Object
@@ -599,8 +547,7 @@ public class TestResult_NewVRA {
         q2Ua.addTransition("\"\\\\S\"", q1Ua);
         q2Ua.addTransition("\"\\\\E\"", q1Ua);
 
-        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua");
-        Ua.setInitialState(q0Ua);
+        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua",q0Ua);
 
 
         // Definition VSPA
@@ -688,8 +635,7 @@ public class TestResult_NewVRA {
         State q5S0 = new State("q5S0", true);
         q4S0.addTransition("S1", q5S0);
 
-        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0");
-        S0.setInitialState(q0S0);
+        JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q0S0);
 
         // Procedural Automaton A^S1  --> SelfRepository
         State q0S1 = new State("q0S1", false);
@@ -704,8 +650,7 @@ public class TestResult_NewVRA {
         State q5S1 = new State("q5S1", true);
         q4S1.addTransition("S3", q5S1);
         
-        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1");
-        S1.setInitialState(q0S1);
+        JSONProceduralAutomaton S1 = new JSONProceduralAutomaton("S1", q0S1);
         
 
         // // Procedural Automaton A^S2 --> dependencies
@@ -773,8 +718,7 @@ public class TestResult_NewVRA {
         // q16S2.addTransition("\"\\\\S\"", q17S2);
         // q16S2.addTransition("\"\\\\E\"", q17S2);
 
-        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3");
-        S3.setInitialState(q0S3);
+        JSONProceduralAutomaton S3 = new JSONProceduralAutomaton("S3", q0S3);
 
         
         // Procedural Automaton A^S4  --> MatchCondition
@@ -790,8 +734,7 @@ public class TestResult_NewVRA {
         State q5S4 = new State("q5S4", true);
         q4S4.addTransition("\"\\\\S\"", q5S4);
 
-        JSONProceduralAutomaton S4 = new JSONProceduralAutomaton("S4");
-        S4.setInitialState(q0S4);
+        JSONProceduralAutomaton S4 = new JSONProceduralAutomaton("S4", q0S4);
 
         // Procedural Automaton A^S5  --> RequestOverrides
         State q0S5 = new State("q0S5", false);
@@ -833,8 +776,7 @@ public class TestResult_NewVRA {
         State q14S5 = new State("q14S5", true);
         q13S5.addTransition("\"\\\\S\"", q14S5);
         
-        JSONProceduralAutomaton S5 = new JSONProceduralAutomaton("S5");
-        S5.setInitialState(q0S5);
+        JSONProceduralAutomaton S5 = new JSONProceduralAutomaton("S5", q0S5);
 
         // Procedural Automaton A^S6  --> ResponseOverrides
         State q0S6 = new State("q0S6", false);
@@ -869,8 +811,7 @@ public class TestResult_NewVRA {
         State q14S6 = new State("q14S6", true);
         q13S6.addTransition("\"\\\\S\"", q14S6);
 
-        JSONProceduralAutomaton S6 = new JSONProceduralAutomaton("S6");
-        S6.setInitialState(q0S6);
+        JSONProceduralAutomaton S6 = new JSONProceduralAutomaton("S6", q0S6);
 
         // Procedural Automaton A^S7  --> Methods
         State q0S7 = new State("q0S7", false);
@@ -880,8 +821,7 @@ public class TestResult_NewVRA {
         q1S7.addTransition("#", q2S7);
         q2S7.addTransition("\"\\\\E\"", q1S7);
 
-        JSONProceduralAutomaton S7 = new JSONProceduralAutomaton("S7");
-        S7.setInitialState(q0S7);
+        JSONProceduralAutomaton S7 = new JSONProceduralAutomaton("S7", q0S7);
 
         // Procedural Automaton A^S8  --> desc
         State q0S8 = new State("q0S8", true);
@@ -891,8 +831,7 @@ public class TestResult_NewVRA {
         q1S8.addTransition("#", q2S8);
         q2S8.addTransition("\"\\\\S\"", q1S8);
 
-        JSONProceduralAutomaton S8 = new JSONProceduralAutomaton("S8");
-        S8.setInitialState(q0S8);
+        JSONProceduralAutomaton S8 = new JSONProceduralAutomaton("S8", q0S8);
 
         // Procedural Automaton A^S9  --> ResponseBody
         State q0S9 = new State("q0S9", false);
@@ -902,8 +841,7 @@ public class TestResult_NewVRA {
         q1S9.addTransition("#", q2S9);
         q2S9.addTransition("Uo", q1S9);
 
-        JSONProceduralAutomaton S9 = new JSONProceduralAutomaton("S9");
-        S9.setInitialState(q0S9);
+        JSONProceduralAutomaton S9 = new JSONProceduralAutomaton("S9", q0S9);
 
 
         // Procedural Automaton A^Uo  --> Universal Object
@@ -922,8 +860,7 @@ public class TestResult_NewVRA {
         q1Uo.addTransition("\"\\\\S\"", q2Uo);
         q1Uo.addTransition("\"\\\\E\"", q2Uo);
 
-        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo");
-        Uo.setInitialState(q0Uo);
+        JSONProceduralAutomaton Uo = new JSONProceduralAutomaton("Uo", q0Uo);
 
         
         // Procedural Automaton A^Uo  --> Universal Object
@@ -952,8 +889,7 @@ public class TestResult_NewVRA {
         q2Ua.addTransition("\"\\\\S\"", q1Ua);
         q2Ua.addTransition("\"\\\\E\"", q1Ua);
 
-        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua");
-        Ua.setInitialState(q0Ua);
+        JSONProceduralAutomaton Ua = new JSONProceduralAutomaton("Ua", q0Ua);
 
 
         // Definition VSPA
@@ -995,7 +931,7 @@ public class TestResult_NewVRA {
     public static void runResult(String jsontype, JSON_VRA automaton) {
         String directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\"+ jsontype + "\\Documents\\" + jsontype + ".json\\Random";
         if (jsontype.equals("vim")) {
-            directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\vim\\Documents\\vim-addon-info.json\\Random\\Done";
+            directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\vim\\Documents\\vim-addon-info.json\\Random";
         }
         if (jsontype.equals("proxies")) {
             directoryPath = "D:\\TFE2-code-gaetan\\ValidatingJSONDocumentsWithLearnedVPA\\schemas\\benchmarks\\"+ jsontype + "\\Documents\\"+ jsontype +".json\\Random\\all";
@@ -1011,15 +947,13 @@ public class TestResult_NewVRA {
                 for (File file : files) {
                     try {
                         System.out.println("Processing file: " + file.getName());
-                        if (file.getName().contains("valid-2737")) {
-                            break;
-                        }
 
                         List<String> json = SanitizeJSON.sanitizeJSON(file.getAbsolutePath());
                         
                         long tot_time = 0;
                         int test_case = 100;
                         for (int j = 0; j < test_case; j++) {
+                            System.gc();
                             long time = System.nanoTime();
                             automaton.accepts(json,false, TestResult_NewVRA.DEBUG);
                             time = (System.nanoTime() - time);
@@ -1033,7 +967,7 @@ public class TestResult_NewVRA {
                         time = (System.nanoTime() - time);
                         
                         Long memory;
-                        if (!TestResult_NewVRA.DEBUG) {
+                        if (false && !TestResult_NewVRA.DEBUG) {
                             // import com.google.common.testing.GcFinalization;
                             //  GcFinalization.awaitFullGc(); ??
                             TestResult.forceFullGc();
@@ -1062,7 +996,7 @@ public class TestResult_NewVRA {
                         i++;
                         
                         if (TestResult_NewVRA.DEBUG) {
-                            if (i > 30) {
+                            if (i > 1) {
                                 break; 
                             }
                         }

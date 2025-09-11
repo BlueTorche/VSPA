@@ -30,10 +30,8 @@ public class testVSPA {
         qR0.addTransition("b", qR1);
 
         // Définition du Procedural Automaton 
-        ProceduralAutomaton S = new ProceduralAutomaton("S");
-        S.setInitialState(qS0);
-        ProceduralAutomaton R = new ProceduralAutomaton("R");
-        R.setInitialState(qR0);
+        ProceduralAutomaton S = new ProceduralAutomaton("S", qS0);
+        ProceduralAutomaton R = new ProceduralAutomaton("R", qR0);
 
         // Definition VSPA
         VisiblySystemProceduralAutomata vspa = new VisiblySystemProceduralAutomata();
@@ -86,8 +84,7 @@ public class testVSPA {
         q06.addTransition("c", q07);
         q07.addTransition("S2", q08);
 
-        ProceduralAutomaton S0 = new ProceduralAutomaton("S0");
-        S0.setInitialState(q00);
+        ProceduralAutomaton S0 = new ProceduralAutomaton("S0", q00);
 
 
         // Procedural Automaton A^S1
@@ -99,8 +96,7 @@ public class testVSPA {
         q11.addTransition("#", q12);
         q12.addTransition("s", q11);
 
-        ProceduralAutomaton S1 = new ProceduralAutomaton("S1");
-        S1.setInitialState(q10);
+        ProceduralAutomaton S1 = new ProceduralAutomaton("S1", q10);
 
 
         // Procedural Automaton A^S2
@@ -127,8 +123,7 @@ public class testVSPA {
         q20.addTransition("e", q28);
         q28.addTransition("i", q29);
 
-        ProceduralAutomaton S2 = new ProceduralAutomaton("S2");
-        S2.setInitialState(q20);
+        ProceduralAutomaton S2 = new ProceduralAutomaton("S2", q20);
 
 
         // Definition VSPA

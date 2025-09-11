@@ -1,18 +1,16 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://json.schemastore.org/vim-addon-info",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "url": {
-      "type": "string",
-      "format": "uri",
-      "examples": ["git://github.com/tpope/vim-surround"]
+      "type": "string"
     },
     "repoType": {
       "enum": ["hg", "git", "svn", "bzr"]
     },
     "selfRepository": {
-      "description": "Info for the plugin itself. Describes where the canonical copy of the plugin can be fetched from.",
       "type": "object",
+      "required": ["type", "url", "deprecated"],
       "properties": {
         "type": {
           "$ref": "#/definitions/repoType"
@@ -21,25 +19,18 @@
           "$ref": "#/definitions/url"
         },
         "deprecated": {
-          "description": "For a deprecated plugin, a deprecation message to be shown to any user who installs the plugin.",
           "type": "string"
         }
-      },
-      "dependencies": {
-        "url": ["type"],
-        "type": ["url"]
       }
     },
     "otherRepository": {
-      "description": "Info about a plugin/repository outside this one.",
       "type": "object",
       "anyOf": [
         {
-          "$comment": "Empty repository info. Used to declare plugin with the given name is required without specifying any explicit details about how to fetch it (e.g., if name can be looked up in a predefined package index).",
           "additionalProperties": false
         },
         {
-          "$comment": "Repository with empty type and url pointing to local path.",
+          "required": ["type", "url", "vim_script_nr", "script-type"],
           "properties": {
             "type": {
               "enum": ["", "archive"]
@@ -48,9 +39,7 @@
               "$ref": "#/definitions/url"
             },
             "vim_script_nr": {
-              "description": "Script ID number of the target plugin on www.vim.org, if any.",
-              "type": "number",
-              "examples": [31, 1075]
+              "type": "number"
             },
             "script-type": {
               "enum": [
@@ -66,7 +55,6 @@
           }
         },
         {
-          "$comment": "Explicit remote repository.",
           "properties": {
             "type": {
               "$ref": "#/definitions/repoType"
@@ -78,61 +66,43 @@
           "required": ["type", "url"]
         }
       ],
+      "required": ["homepage"],
       "properties": {
         "homepage": {
-          "description": "Primary homepage of the plugin.",
-          "type": "string",
-          "format": "uri"
-        },
-        "addon-info": {
-          "$comment": "Addon information for the other plugin in case it does not supply its own addon-info file.",
-          "$ref": "#"
+          "type": "string"
         }
       }
     }
   },
+  "required": ["name", "version", "description", "homepage", "author", "maintainer", "repository", "dependencies"],
   "properties": {
     "name": {
-      "description": "The name of the plugin. Used by plugin managers and some introspection tools. Generally corresponds to the name of the repository but without \"vim\" prefix/suffix.",
-      "type": "string",
-      "examples": ["surround.vim", "nerdtree", "maktaba"]
+      "type": "string"
     },
     "version": {
-      "description": "Dotted version number of the plugin, generally in semantic versioning scheme.",
-      "type": "string",
-      "examples": ["0.0.1", "2.0"],
-      "default": "0.0.1"
+      "type": "string"
     },
     "description": {
-      "description": "Short description of the plugin and what it does (a sentence or two)",
       "type": "string"
     },
     "homepage": {
-      "description": "Primary homepage of the plugin.",
-      "type": "string",
-      "format": "uri"
+      "type": "string"
     },
     "author": {
-      "description": "Name of the person or organization that created the plugin",
-      "type": "string",
-      "examples": ["Priya Exampleton", "Example Industries"]
+      "type": "string"
     },
     "maintainer": {
-      "description": "Name of the person who maintains the plugin",
-      "type": "string",
-      "examples": ["Priya Exampleton"]
+      "type": "string"
     },
     "repository": {
       "$ref": "#/definitions/selfRepository"
     },
     "dependencies": {
-      "description": "Plugins that are strictly required for the plugin to work, where keys are plugin names and values may describe where plugins can be fetched from.",
       "type": "object",
       "additionalProperties": {
         "$ref": "#/definitions/otherRepository"
       }
     }
   },
-  "title": "JSON schema for vim plugin addon-info.json metadata files",
   "type": "object"
 }

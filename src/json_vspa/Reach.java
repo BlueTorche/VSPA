@@ -17,4 +17,13 @@ public class Reach {
 
     @Override
     public int hashCode() { return this.toString().hashCode(); }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Reach)) return false;
+        Reach other = (Reach) obj;
+        return first.equals(other.first) && second.equals(other.second);
+    }
+
 }

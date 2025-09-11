@@ -1,12 +1,13 @@
 import csv
 import random
 
-JSONTYPE = "vim"
 JSONTYPE = "recursiveList"
 JSONTYPE = "basicTypes"
 JSONTYPE = "proxies"
+JSONTYPE = "vim"
 
 # Remplace par le chemin de ton fichier CSV
+time_vspa_path2 =  "C:/Users/dubru/Documents/GitHub/VSPA/src/Result/result"+ JSONTYPE + ".csv"
 time_vspa_path =  "C:/Users/dubru/Documents/GitHub/VSPA/src/Result/time-result"+ JSONTYPE + ".csv"
 memo_vspa_path =  "C:/Users/dubru/Documents/GitHub/VSPA/src/Result/memory-result"+ JSONTYPE + ".csv"
 
@@ -28,8 +29,19 @@ with open(time_vspa_path, mode="r") as file:
                          "VSPA Memory": -1, 
                          "VSPA Result": True if row[3]=="true" else False}
         t += 1 if row[3]=="true" else 0
-print(t)
         
+with open(time_vspa_path2, mode="r") as file:
+    reader = csv.reader(file, delimiter=";")
+    for row in reader:
+        if row[0] == "Documents ID": continue
+        if not row[0] in datas: continue
+        datas[row[0]]["VSPA Time (ms)2"] = int(row[1])
+        datas[row[0]]["VSPA Result2"] = True if row[3]=="true" else False
+        assert datas[row[0]]["VSPA Result"] == datas[row[0]]["VSPA Result2"]
+        t += 1 if row[3]=="true" else 0
+        
+
+
 with open(memo_vspa_path, mode="r") as file:
     reader = csv.reader(file, delimiter=";")
     for row in reader:
@@ -120,6 +132,7 @@ with open(memo_vpa_path, mode="r") as file:
 
 max_VSPA_time = 0
 mean_VSPA_time = 0
+mean_VSPA_time2 = 0
 max_VSPA_mem = 0
 mean_VSPA_mem = 0
 
@@ -152,6 +165,7 @@ for (k,v) in datas.items():
         max_JSON_mem = max(max_JSON_mem, v["JSON Memory"])
         
         mean_VSPA_time += v["VSPA Time (ms)"]
+        mean_VSPA_time2 += v["VSPA Time (ms)2"]
         mean_VPA_time += v["VPA Time (ms)"] 
         mean_JSON_time += v["JSON Time (ms)"] 
         
@@ -171,6 +185,7 @@ print("Max JSON Time : \t", max_JSON_time)
 print()
         
 print("Mean VSPA Time : \t", mean_VSPA_time / tot)
+print("Mean VSPA2 Time : \t", mean_VSPA_time2 / tot)
 print("Mean VPA Time : \t", mean_VPA_time / tot *1000)
 print("Mean JSON Time : \t", mean_JSON_time / tot *1000)
 print()
@@ -217,9 +232,10 @@ for (k,v) in datas.items():
         else: 
             print(k,v)
             
-        VSPA_times.append(v["VSPA Time (ms)"]//1000)
+        VSPA_times.append(v["VSPA Time (ms)"]/1000)
         VPA_times.append(v["VPA Time (ms)"])
-        JSON_times.append(v["JSON Time (ms)"])
+        JSON_times.append(v["VSPA Time (ms)2"]/1000)
+        # JSON_times.append(v["JSON Time (ms)"])
         
         if not (v["VSPA Memory"] == -1 or v["VPA Memory"] == -1 or v["JSON Memory"] == -1):
             VSPA_mem.append(v["VSPA Memory"])
@@ -233,10 +249,11 @@ for (k,v) in datas.items():
 plt.figure(dpi=300)
 plt.plot(DOC_len, VSPA_times, 'gs', 
          DOC_len, VPA_times, 'bx', 
-         DOC_len, JSON_times, 'ro', markerfacecolor='none')
+         DOC_len, JSON_times, 'ro',
+         markerfacecolor='none')
 plt.xlabel("Document Length")
 plt.ylabel("Time (ms)")
-plt.legend(["VSPA", "VPA", "Classical"])
+plt.legend(["VSPA", "VPA", "VSPA2"])
 if JSONTYPE == "proxies":
     plt.title("Azure Proxies")
 if JSONTYPE == "vim":
@@ -247,6 +264,9 @@ if JSONTYPE == "basicTypes":
     plt.title("Basic Types")
 plt.grid(True)
 plt.show()
+
+import sys
+sys.exit()
 
 plt.figure(dpi=500)
 plt.plot(DOC_len_mem, VSPA_mem, 'gs', 

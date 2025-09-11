@@ -11,8 +11,8 @@ import vspa.ProceduralAutomaton;
 public class JSONProceduralAutomaton extends ProceduralAutomaton {
     KeyGraph keyGraph;
 
-    public JSONProceduralAutomaton(String proceduralSymbol) {
-        super(proceduralSymbol);
+    public JSONProceduralAutomaton(String proceduralSymbol, State initialState) {
+        super(proceduralSymbol, initialState);
     }
 
     public void createKeyGraph(Set<String> keySymbols) {

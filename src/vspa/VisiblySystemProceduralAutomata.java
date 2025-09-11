@@ -15,7 +15,6 @@ public class VisiblySystemProceduralAutomata {
 
     public void addProceduralAutomaton(ProceduralAutomaton nfa, String callSymbol) {
         proceduralAutomata.add(nfa);
-        nfa.fillProceduralSymbols();
         linkingFunction.put(nfa.getProceduralSymbol(), callSymbol);
     }
 

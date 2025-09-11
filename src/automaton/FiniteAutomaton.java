@@ -5,6 +5,11 @@ import java.util.*;
 public class FiniteAutomaton {
     private State initialState;
 
+    public FiniteAutomaton() {};
+    public FiniteAutomaton(State initialState) {
+        this.initialState = initialState;
+    }
+
     public void setInitialState(State state) {
         initialState = state;
     }
