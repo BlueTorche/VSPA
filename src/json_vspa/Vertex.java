@@ -1,12 +1,12 @@
 package json_vspa;
 import automaton.State;
 
-public class Vertex {
-    public State startState;
-    public State endState;
+public class Vertex<L> {
+    public L startState;
+    public L endState;
     public String key;
 
-    public Vertex(State startState, State endState, String key) {
+    public Vertex(L startState, L endState, String key) {
         this.startState = startState;
         this.endState = endState;
         this.key = key;

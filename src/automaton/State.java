@@ -2,21 +2,14 @@ package automaton;
 
 import java.util.*;
 
-public class State {
+public class State<T extends State<T>> {
     private final String name;
     private final boolean isFinal;
-    private final Map<String, Set<State>> transitions = new HashMap<>();
-    private String proceduralSymbol;
+    private final Map<String, Set<T>> transitions = new HashMap<>();
 
     public State(String name, boolean isFinal) {
         this.name = name;
         this.isFinal = isFinal;
-    }
-
-    public State(String name, boolean isFinal, String proceduralSymbol) {
-        this.name = name;
-        this.isFinal = isFinal;
-        this.proceduralSymbol = proceduralSymbol;
     }
 
     public String getName() {
@@ -27,25 +20,17 @@ public class State {
         return isFinal;
     }
 
-    public void addTransition(String symbol, State target) {
+    public void addTransition(String symbol, T target) {
         transitions.computeIfAbsent(symbol, _s -> new HashSet<>()).add(target);
     }
 
-    public String getProceduralSymbol() {
-        return proceduralSymbol;
-    }
-
-    public void setProceduralSymbol(String proceduralSymbol) {
-        this.proceduralSymbol = proceduralSymbol;
-    }
-
-    public Set<State> getTransitions(String symbol) {
+    public Set<T> getTransitions(String symbol) {
         return transitions.getOrDefault(symbol, Collections.emptySet());
     }
 
     public Set<String> getTransitionsSymbols() { return transitions.keySet(); }
 
-    public Map<String, Set<State>> getAllTransitions() {
+    public Map<String, Set<T>> getAllTransitions() {
         return transitions;
     }
 
@@ -53,8 +38,8 @@ public class State {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof State)) return false;
-        State other = (State) obj;
-        return name.equals(other.name);
+        T other = (T) obj;
+        return name.equals(other.getName());
     }
 
     @Override

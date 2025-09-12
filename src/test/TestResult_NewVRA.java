@@ -318,51 +318,6 @@ public class TestResult_NewVRA {
         q23S0.addTransition("#", q24S0);
         State q25S0 = new State("q25S0", false);
         q24S0.addTransition("\"\\\\S\"", q25S0);
-        /*q0S0.addTransition("\"type\"", q25S0);
-        q3S0.addTransition("\"type\"", q25S0);
-        q6S0.addTransition("\"type\"", q25S0);
-        q9S0.addTransition("\"type\"", q25S0);
-        q12S0.addTransition("\"type\"", q25S0);
-        q15S0.addTransition("\"type\"", q25S0);
-        q18S0.addTransition("\"type\"", q25S0);
-        q21S0.addTransition("\"type\"", q25S0);
-        q24S0.addTransition("\"type\"", q25S0);
-        q0S0.addTransition("\"url\"", q25S0);
-        q3S0.addTransition("\"url\"", q25S0);
-        q6S0.addTransition("\"url\"", q25S0);
-        q9S0.addTransition("\"url\"", q25S0);
-        q12S0.addTransition("\"url\"", q25S0);
-        q15S0.addTransition("\"url\"", q25S0);
-        q18S0.addTransition("\"url\"", q25S0);
-        q21S0.addTransition("\"url\"", q25S0);
-        q24S0.addTransition("\"url\"", q25S0);
-        q0S0.addTransition("\"deprecated\"", q25S0);
-        q3S0.addTransition("\"deprecated\"", q25S0);
-        q6S0.addTransition("\"deprecated\"", q25S0);
-        q9S0.addTransition("\"deprecated\"", q25S0);
-        q12S0.addTransition("\"deprecated\"", q25S0);
-        q15S0.addTransition("\"deprecated\"", q25S0);
-        q18S0.addTransition("\"deprecated\"", q25S0);
-        q21S0.addTransition("\"deprecated\"", q25S0);
-        q24S0.addTransition("\"deprecated\"", q25S0);
-        q0S0.addTransition("\"vim_script_nr\"", q25S0);
-        q3S0.addTransition("\"vim_script_nr\"", q25S0);
-        q6S0.addTransition("\"vim_script_nr\"", q25S0);
-        q9S0.addTransition("\"vim_script_nr\"", q25S0);
-        q12S0.addTransition("\"vim_script_nr\"", q25S0);
-        q15S0.addTransition("\"vim_script_nr\"", q25S0);
-        q18S0.addTransition("\"vim_script_nr\"", q25S0);
-        q21S0.addTransition("\"vim_script_nr\"", q25S0);
-        q24S0.addTransition("\"vim_script_nr\"", q25S0);
-        q0S0.addTransition("\"script-type\"", q25S0);
-        q3S0.addTransition("\"script-type\"", q25S0);
-        q6S0.addTransition("\"script-type\"", q25S0);
-        q9S0.addTransition("\"script-type\"", q25S0);
-        q12S0.addTransition("\"script-type\"", q25S0);
-        q15S0.addTransition("\"script-type\"", q25S0);
-        q18S0.addTransition("\"script-type\"", q25S0);
-        q21S0.addTransition("\"script-type\"", q25S0);
-        q24S0.addTransition("\"script-type\"", q25S0);*/
         State q26S0 = new State("q26S0", true);
         q25S0.addTransition("Uo", q26S0);
         q25S0.addTransition("Ua", q26S0);
@@ -551,8 +506,7 @@ public class TestResult_NewVRA {
 
 
         // Definition VSPA
-        JSON_VRA vspa = new JSON_VRA();
-        vspa.setVSPAAlphabet(alphabet);
+        JSON_VRA vspa = new JSON_VRA(alphabet);
         vspa.addProceduralAutomaton(S, "{");
         vspa.addProceduralAutomaton(S0, "{");
         vspa.addProceduralAutomaton(S1, "{");

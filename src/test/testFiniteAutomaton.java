@@ -12,10 +12,10 @@ public class testFiniteAutomaton {
 
     private static void testDFA() {
         // États
-        State q0 = new State("q0", false);
-        State q1 = new State("q1", true);
-        State q2 = new State("q2", false);
-        State q3 = new State("q3", true);
+        DFAState q0 = new DFAState("q0", false);
+        DFAState q1 = new DFAState("q1", true);
+        DFAState q2 = new DFAState("q2", false);
+        DFAState q3 = new DFAState("q3", true);
 
         // Transitions 
         q0.addTransition("a", q2);
@@ -29,7 +29,7 @@ public class testFiniteAutomaton {
 
 
         // Définition du NFA 
-        FiniteAutomaton dfa = new FiniteAutomaton();
+        FiniteAutomaton<DFAState> dfa = new FiniteAutomaton<DFAState>();
         dfa.setInitialState(q0);
 
         // Test - L(dfa) = Suff(w) = "b"
@@ -41,11 +41,11 @@ public class testFiniteAutomaton {
 
     private static void testNFA() {
         // États
-        State q0 = new State("q0", false);
-        State q1 = new State("q1", false);
-        State q2 = new State("q2", true);
-        State q3 = new State("q3", false);
-        State q4 = new State("q4", true);
+        DFAState q0 = new DFAState("q0", false);
+        DFAState q1 = new DFAState("q1", false);
+        DFAState q2 = new DFAState("q2", true);
+        DFAState q3 = new DFAState("q3", false);
+        DFAState q4 = new DFAState("q4", true);
 
         // Transitions 
         q0.addTransition("a", q0);
@@ -58,7 +58,7 @@ public class testFiniteAutomaton {
         q4.addTransition("b", q4);
 
         // Définition du NFA 
-        FiniteAutomaton nfa = new FiniteAutomaton();
+        FiniteAutomaton<DFAState> nfa = new FiniteAutomaton<DFAState>();
         nfa.setInitialState(q0);
 
         // Test - L(nfa1) = Suff(w) = "bb" or w.contains("ab")

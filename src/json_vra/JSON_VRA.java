@@ -3,30 +3,33 @@ package json_vra;
 import java.util.*;
 
 import automaton.State;
-import test.TestResult;
-import utils.Pair;
 
+import vspa.VRA_State;
+import vspa.VSPAAlphabet;
 import vspa.VisiblySystemProceduralAutomata;
 import json_vspa.JSONProceduralAutomaton;
-import json_vspa.Reach;
 import json_vspa.Vertex;
 
-public class JSON_VRA extends VisiblySystemProceduralAutomata{
+public class JSON_VRA extends VisiblySystemProceduralAutomata {
     private JSONProceduralAutomaton startingAutomaton;
     private final Map<String, JSONProceduralAutomaton> proceduralAutomata = new HashMap<>();
+
+    public JSON_VRA(VSPAAlphabet alphabet) {
+        super(alphabet);
+    }
 
     public void setStartingAutomaton(JSONProceduralAutomaton startingAutomaton) {
         this.startingAutomaton = startingAutomaton;
     }
 
+
     public void addProceduralAutomaton(JSONProceduralAutomaton nfa, String callSymbol) {
-        proceduralAutomata.put(nfa.getProceduralSymbol(), nfa);
-        linkingFunction.put(nfa.getProceduralSymbol(), callSymbol);
+        super.addProceduralAutomaton(nfa, callSymbol);
     }
 
     public void createKeyGraphs(Set<String> keySymbols) {
         for (JSONProceduralAutomaton pa : proceduralAutomata.values()) {
-            if (linkingFunction.get(pa.getProceduralSymbol()).equals("{")) {
+            if (alphabet.getCallFromProcedural(pa.getProceduralSymbol()).equals("{")) {
                 pa.createKeyGraph(keySymbols);
             }
         }
@@ -42,6 +45,7 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
         return size;
     }
 
+    /*
     public Pair<Boolean,Long> accepts(List<String> word, boolean measureMemory, boolean debug) {
         final long memoryStart;
         long maxMemory;
@@ -58,7 +62,7 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
         reach.computeIfAbsent(startingAutomaton.getInitalState(), _ -> new HashSet<>()).add(startingAutomaton.getInitalState());
         Set<String> K = new HashSet<>();
         String k = "";
-        Set<Vertex> Good = new HashSet<>();
+        Set<Vertex<State>> Good = new HashSet<>();
 
         for (int i = 0; i < word.size() ; i++) {
             if (measureMemory) {
@@ -82,7 +86,7 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
                             JSONProceduralAutomaton pa = proceduralAutomata.get(procSymbol);
                             if (symbol.equals("{") && !nextSymbol.equals("}")) {
                                 K.add(nextSymbol);
-                                for (Vertex vertex : pa.getKeyGraph().getVerticesByKey(nextSymbol)) {
+                                for (Vertex<State> vertex : pa.getKeyGraph().getVerticesByKey(nextSymbol)) {
                                     nextR.computeIfAbsent(vertex.startState, _ -> new HashSet<>()).add(vertex.startState);
                                 }
                             } else {
@@ -132,7 +136,7 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
                 } else {
                     for (State end_state : reach.keySet()) {
                         for (State start_state : reach.get(end_state))
-                            Good.add(new Vertex(start_state, end_state, k));
+                            Good.add(new Vertex<>(start_state, end_state, k));
                     }
                     for (State state : reach.keySet()) {
                         String procSymbol = state.getProceduralSymbol();
@@ -183,6 +187,51 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata{
         }
 
         return new Pair<Boolean,Long>(isAccepted, maxMemory-memoryStart);
+    }
+    */
+    public ValidationState<VRA_State> getSuccessor(ValidationState<VRA_State> state, String symbol, String nextSymbol) {
+        return switch (alphabet.kindOfSymbol(symbol)) {
+            case CALL -> getCallSuccessor(state, symbol, nextSymbol);
+            case RETURN -> getReturnSuccessor(state, symbol);
+            case INTERNAL -> getInternalSuccessor(state, symbol, nextSymbol);
+            default -> null;
+        };
+    }
+
+    public ValidationState<VRA_State> getInternalSuccessor(ValidationState<VRA_State> state, String symbol, String nextSymbol) {
+        //TODO
+        return null;
+    }
+
+    public ValidationState<VRA_State> getCallSuccessor(ValidationState<VRA_State> state, String callSymbol, String nextSymbol) {
+        final Set<PairSourceToReached<VRA_State>> sourceToReachedLocations = state.getSourceToReachedLocations();
+        final ValidationStackContents<VRA_State> currentStack = state.getStack();
+        final ValidationStackContents<VRA_State> newStack = ValidationStackContents.push(sourceToReachedLocations, currentStack);
+
+        final Set<PairSourceToReached<VRA_State>> successorSourceToReachedLocations = new LinkedHashSet<>();
+
+        for (String procSymbol : alphabet.getProceduralsFromCall(callSymbol)) {
+            if (alphabet.getCallFromProcedural(procSymbol).equals(callSymbol)) {
+                JSONProceduralAutomaton pa = proceduralAutomata.get(procSymbol);
+                if (callSymbol.equals("{") && !nextSymbol.equals("}")) {
+                    newStack.addKey(nextSymbol);
+                    successorSourceToReachedLocations.addAll(
+                            PairSourceToReached.getIdentityPairs(pa.getKeyGraph().getLocationsReadingKey(nextSymbol)));
+                } else {
+                    successorSourceToReachedLocations.add(PairSourceToReached.of(pa.getInitalState(),pa.getInitalState()));
+                }
+            }
+        }
+
+
+        if (successorSourceToReachedLocations.isEmpty())
+            return null;
+        return new ValidationState<>(successorSourceToReachedLocations, newStack);
+    }
+
+    public ValidationState<VRA_State> getReturnSuccessor(ValidationState<VRA_State> state, String symbol) {
+        //TODO
+        return null;
     }
 
     private void debug(String symbol, List<StackElement> stack, Map<State, Set<State>> R, Set<String> K, String k, Set<Vertex> Good) {
