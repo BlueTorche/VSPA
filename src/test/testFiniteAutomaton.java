@@ -29,7 +29,7 @@ public class testFiniteAutomaton {
 
 
         // Définition du NFA 
-        FiniteAutomaton<DFAState> dfa = new FiniteAutomaton<DFAState>();
+        FiniteAutomaton<DFAState> dfa = new FiniteAutomaton<>();
         dfa.setInitialState(q0);
 
         // Test - L(dfa) = Suff(w) = "b"
@@ -37,6 +37,7 @@ public class testFiniteAutomaton {
         for (String w : words) {
             System.out.println("Input: " + w + " -> " + (dfa.accepts(w) ? "ACCEPTED" : "REJECTED"));
         }
+        System.out.println("L(dfa) = {w | \"b\" in Suff(w) }");
     }
 
     private static void testNFA() {
@@ -58,13 +59,14 @@ public class testFiniteAutomaton {
         q4.addTransition("b", q4);
 
         // Définition du NFA 
-        FiniteAutomaton<DFAState> nfa = new FiniteAutomaton<DFAState>();
+        FiniteAutomaton<DFAState> nfa = new FiniteAutomaton<>();
         nfa.setInitialState(q0);
 
-        // Test - L(nfa1) = Suff(w) = "bb" or w.contains("ab")
+        // Test - L(nfa1) = Suff(w) = "bb"
         String[] words = {"", "a", "ab", "aaab", "b", "bb", "baa", "baba", "aab", "aabb"};
         for (String w : words) {
             System.out.println("Input: " + w + " -> " + (nfa.accepts(w) ? "ACCEPTED" : "REJECTED"));
         }
+        System.out.println("L(nfa) = {w | \"bb\" in Suff(w) or w.contains(\"ab\")}");
     }
 }

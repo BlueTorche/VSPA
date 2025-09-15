@@ -5,15 +5,16 @@ import java.util.Map;
 import java.util.Set;
 
 import automaton.State;
+import vspa.VRA_State;
 
 public class StackElement {
-    public Set<Map.Entry<State, String>> states;
+    public Set<Map.Entry<VRA_State, String>> states;
     public Set<Reach> R = new HashSet<>();
     public Set<String> K = new HashSet<>();
     public String k;
-    public Set<Vertex> Good = new HashSet<>();
+    public Set<Vertex<VRA_State>> Good = new HashSet<>();
 
-    public StackElement(Set<Map.Entry<State, String>> states, Set<Reach> R, Set<String> K, String k, Set<Vertex> Good) {
+    public StackElement(Set<Map.Entry<VRA_State, String>> states, Set<Reach> R, Set<String> K, String k, Set<Vertex<VRA_State>> Good) {
         this.states = states;
         this.R = R;
         this.K = K;

@@ -58,7 +58,7 @@ public class JSONProceduralAutomaton extends ProceduralAutomaton {
         }
     }
 
-    public KeyGraph getKeyGraph() {
+    public KeyGraph<VRA_State> getKeyGraph() {
         return keyGraph;
     }
 }

@@ -1,15 +1,12 @@
 package test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import automaton.State;
 import json_vspa.JSONProceduralAutomaton;
 import json_vspa.JSONVSPA;
 import json_vspa.KeyGraph;
 import json_vspa.Vertex;
+import vspa.VRA_State;
 import vspa.VSPAAlphabet;
 
 public class testJSONVSPA {
@@ -28,16 +25,16 @@ public class testJSONVSPA {
         keys.add("e");
 
                // Procedural Automaton A^S2
-        State q20 = new State("q20", true);
-        State q21 = new State("q21", false);
-        State q22 = new State("q22", false);
-        State q23 = new State("q23", false);
-        State q24 = new State("q24", false);
-        State q25 = new State("q25", true);
-        State q26 = new State("q26", false);
-        State q27 = new State("q27", true);
-        State q28 = new State("q28", false);
-        State q29 = new State("q29", true);
+        VRA_State q20 = new VRA_State("q20", true);
+        VRA_State q21 = new VRA_State("q21", false);
+        VRA_State q22 = new VRA_State("q22", false);
+        VRA_State q23 = new VRA_State("q23", false);
+        VRA_State q24 = new VRA_State("q24", false);
+        VRA_State q25 = new VRA_State("q25", true);
+        VRA_State q26 = new VRA_State("q26", false);
+        VRA_State q27 = new VRA_State("q27", true);
+        VRA_State q28 = new VRA_State("q28", false);
+        VRA_State q29 = new VRA_State("q29", true);
 
         q20.addTransition("d", q21);
         q21.addTransition("n", q22);
@@ -54,14 +51,14 @@ public class testJSONVSPA {
         JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q20);
 
         S2.createKeyGraph(keys);
-        KeyGraph keyGraph0 = S2.getKeyGraph();
+        KeyGraph<VRA_State> keyGraph0 = S2.getKeyGraph();
 
-        for (Vertex v : keyGraph0.getVertices()) {
+        for (Vertex<VRA_State> v : keyGraph0.getVertices()) {
             if (keyGraph0.isInitialVertex(v)) {
                 System.out.print("Initial ");
             }
             System.out.println("Vertex: " + v.toString());
-            for (Vertex v2 : keyGraph0.getEdges(v)) {
+            for (Vertex<VRA_State> v2 : keyGraph0.getEdges(v)) {
                 System.out.println("  Adjacent: " + v2.toString());
             }
         }
@@ -69,15 +66,15 @@ public class testJSONVSPA {
         System.out.println("-------------------------------------------------");
 
         // Procedural Automaton A^S0
-        State q00 = new State("q00", false);
-        State q01 = new State("q01", false);
-        State q02 = new State("q02", false);
-        State q03 = new State("q03", false);
-        State q04 = new State("q04", false);
-        State q05 = new State("q05", false);
-        State q06 = new State("q06", false);
-        State q07 = new State("q07", false);
-        State q08 = new State("q08", true);
+        VRA_State q00 = new VRA_State("q00", false);
+        VRA_State q01 = new VRA_State("q01", false);
+        VRA_State q02 = new VRA_State("q02", false);
+        VRA_State q03 = new VRA_State("q03", false);
+        VRA_State q04 = new VRA_State("q04", false);
+        VRA_State q05 = new VRA_State("q05", false);
+        VRA_State q06 = new VRA_State("q06", false);
+        VRA_State q07 = new VRA_State("q07", false);
+        VRA_State q08 = new VRA_State("q08", true);
         
         q00.addTransition("a", q01);
         q01.addTransition("s", q02);
@@ -91,14 +88,14 @@ public class testJSONVSPA {
         JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q00);
     
         S0.createKeyGraph(keys);
-        KeyGraph keyGraph = S0.getKeyGraph();
+        KeyGraph<VRA_State> keyGraph = S0.getKeyGraph();
 
-        for (Vertex v : keyGraph.getVertices()) {
+        for (Vertex<VRA_State> v : keyGraph.getVertices()) {
             if (keyGraph.isInitialVertex(v)) {
                 System.out.print("Initial ");
             }
             System.out.println("Vertex: " + v.toString());
-            for (Vertex v2 : keyGraph.getEdges(v)) {
+            for (Vertex<VRA_State> v2 : keyGraph.getEdges(v)) {
                 System.out.println("  Adjacent: " + v2.toString());
             }
         }
@@ -121,15 +118,15 @@ public class testJSONVSPA {
 
 
         // Procedural Automaton A^S0
-        State q00 = new State("q00", false);
-        State q01 = new State("q01", false);
-        State q02 = new State("q02", false);
-        State q03 = new State("q03", false);
-        State q04 = new State("q04", false);
-        State q05 = new State("q05", false);
-        State q06 = new State("q06", false);
-        State q07 = new State("q07", false);
-        State q08 = new State("q08", true);
+        VRA_State q00 = new VRA_State("q00", false);
+        VRA_State q01 = new VRA_State("q01", false);
+        VRA_State q02 = new VRA_State("q02", false);
+        VRA_State q03 = new VRA_State("q03", false);
+        VRA_State q04 = new VRA_State("q04", false);
+        VRA_State q05 = new VRA_State("q05", false);
+        VRA_State q06 = new VRA_State("q06", false);
+        VRA_State q07 = new VRA_State("q07", false);
+        VRA_State q08 = new VRA_State("q08", true);
         
         q00.addTransition("a", q01);
         q01.addTransition("s", q02);
@@ -144,9 +141,9 @@ public class testJSONVSPA {
 
 
         // Procedural Automaton A^S1
-        State q10 = new State("q10", true);
-        State q11 = new State("q11", true);
-        State q12 = new State("q12", false);
+        VRA_State q10 = new VRA_State("q10", true);
+        VRA_State q11 = new VRA_State("q11", true);
+        VRA_State q12 = new VRA_State("q12", false);
 
         q10.addTransition("s", q11);
         q11.addTransition("#", q12);
@@ -156,16 +153,16 @@ public class testJSONVSPA {
 
 
         // Procedural Automaton A^S2
-        State q20 = new State("q20", true);
-        State q21 = new State("q21", false);
-        State q22 = new State("q22", false);
-        State q23 = new State("q23", false);
-        State q24 = new State("q24", false);
-        State q25 = new State("q25", true);
-        State q26 = new State("q26", false);
-        State q27 = new State("q27", true);
-        State q28 = new State("q28", false);
-        State q29 = new State("q29", true);
+        VRA_State q20 = new VRA_State("q20", true);
+        VRA_State q21 = new VRA_State("q21", false);
+        VRA_State q22 = new VRA_State("q22", false);
+        VRA_State q23 = new VRA_State("q23", false);
+        VRA_State q24 = new VRA_State("q24", false);
+        VRA_State q25 = new VRA_State("q25", true);
+        VRA_State q26 = new VRA_State("q26", false);
+        VRA_State q27 = new VRA_State("q27", true);
+        VRA_State q28 = new VRA_State("q28", false);
+        VRA_State q29 = new VRA_State("q29", true);
 
         q20.addTransition("d", q21);
         q21.addTransition("n", q22);
@@ -183,8 +180,7 @@ public class testJSONVSPA {
 
 
         // Definition VSPA
-        JSONVSPA vspa = new JSONVSPA();
-        vspa.setVSPAAlphabet(alphabet);
+        JSONVSPA vspa = new JSONVSPA(alphabet);
         vspa.addProceduralAutomaton(S0, "{");
         vspa.addProceduralAutomaton(S1, "[");
         vspa.addProceduralAutomaton(S2, "{");
@@ -219,9 +215,7 @@ public class testJSONVSPA {
         List<List<String>> wordsList = new ArrayList<>();
         for (String w : acceptedWords) {
             List<String> wordList = new ArrayList<>();
-            for (String symbol : w.split("")) {
-                wordList.add(symbol);
-            }
+            Collections.addAll(wordList, w.split(""));
             wordsList.add(wordList);
         }
         
@@ -243,9 +237,7 @@ public class testJSONVSPA {
         wordsList = new ArrayList<>();
         for (String w : rejectedWords) {
             List<String> wordList = new ArrayList<>();
-            for (String symbol : w.split("")) {
-                wordList.add(symbol);
-            }
+            Collections.addAll(wordList, w.split(""));
             wordsList.add(wordList);
         }
         

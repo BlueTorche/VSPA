@@ -1,12 +1,13 @@
 package json_vspa;
 
 import automaton.State;
+import vspa.VRA_State;
 
 public class Reach {
-    public final State first;
-    public final State second;
+    public final VRA_State first;
+    public final VRA_State second;
 
-    public Reach(State first, State second) {
+    public Reach(VRA_State first, VRA_State second) {
         this.first = first;
         this.second = second;
     }
@@ -21,8 +22,7 @@ public class Reach {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Reach)) return false;
-        Reach other = (Reach) obj;
+        if (!(obj instanceof Reach other)) return false;
         return first.equals(other.first) && second.equals(other.second);
     }
 
