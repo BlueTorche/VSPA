@@ -199,8 +199,42 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata {
     }
 
     public ValidationState<VRA_State> getInternalSuccessor(ValidationState<VRA_State> state, String symbol, String nextSymbol) {
-        //TODO
-        return null;
+        if (symbol.equals("#")
+                && !state.getStack().peekSeenKeys().isEmpty()) {
+            return getCommaInObjectSuccessor(state, nextSymbol);
+        }
+
+        final Set<PairSourceToReached<VRA_State>> sourceToReachedLocations = state.getSourceToReachedLocations();
+        final Set<PairSourceToReached<VRA_State>> successorSourceToReachedLocations = new LinkedHashSet<>();
+
+        for (PairSourceToReached<VRA_State> p : sourceToReachedLocations) {
+            for (VRA_State reached : p.getReachedLocation().getTransitions(symbol))
+                successorSourceToReachedLocations.add(PairSourceToReached.of(p.getSourceLocation(), reached));
+        }
+
+        return new ValidationState<>(successorSourceToReachedLocations, state.getStack());
+    }
+
+    public ValidationState<VRA_State> getCommaInObjectSuccessor(ValidationState<VRA_State> state, String nextSymbol) {
+        final Set<PairSourceToReached<VRA_State>> sourceToReachedLocations = state.getSourceToReachedLocations();
+        final ValidationStackContents<VRA_State> currentStack = state.getStack();
+        final String currentKey = currentStack.peekCurrentKey();
+
+        for (PairSourceToReached<VRA_State> p : sourceToReachedLocations) {
+            currentStack.markAccepted(new Vertex<>(p.getSourceLocation(), p.getReachedLocation(), currentKey));
+        }
+
+        if (!currentStack.addKey(nextSymbol))
+            return null;
+
+        final Set<PairSourceToReached<VRA_State>> successorSourceToReachedLocations = new LinkedHashSet<>();
+
+        for (JSONProceduralAutomaton pa : proceduralAutomata.values()) {
+            successorSourceToReachedLocations.addAll(
+                    PairSourceToReached.getIdentityPairs(pa.getKeyGraph().getLocationsReadingKey(nextSymbol)));
+        }
+
+        return new ValidationState<>(successorSourceToReachedLocations, state.getStack());
     }
 
     public ValidationState<VRA_State> getCallSuccessor(ValidationState<VRA_State> state, String callSymbol, String nextSymbol) {
@@ -222,7 +256,6 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata {
                 }
             }
         }
-
 
         if (successorSourceToReachedLocations.isEmpty())
             return null;
