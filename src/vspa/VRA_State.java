@@ -17,7 +17,7 @@ public class VRA_State extends State<VRA_State> {
         this.proceduralAutomaton = proceduralAutomaton;
     }
 
-    public ProceduralAutomaton getProceduralSymbol() {
+    public ProceduralAutomaton getProceduralAutomaton() {
         return proceduralAutomaton;
     }
 

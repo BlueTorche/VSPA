@@ -1,15 +1,18 @@
 package test;
 
-import java.util.*;
-
+import json_vra.JSON_VRA;
+import json_vra.ValidationState;
 import json_vspa.JSONProceduralAutomaton;
 import json_vspa.JSONVSPA;
 import json_vspa.KeyGraph;
 import json_vspa.Vertex;
+import utils.Pair;
 import vspa.VRA_State;
 import vspa.VSPAAlphabet;
 
-public class testJSONVSPA {
+import java.util.*;
+
+public class testJSONVRA {
     public static void main(String[] args) {
         System.out.println("JSON VSPA :");
         testKeyGraph();
@@ -17,12 +20,12 @@ public class testJSONVSPA {
     }
 
     private static void testKeyGraph() {
-        List<String> sortedKeys = new ArrayList<>();
-        sortedKeys.add("a");
-        sortedKeys.add("b");
-        sortedKeys.add("c");
-        sortedKeys.add("d");
-        sortedKeys.add("e");
+        List<String> keys = new ArrayList<>();
+        keys.add("a");
+        keys.add("b");
+        keys.add("c");
+        keys.add("d");
+        keys.add("e");
 
                // Procedural Automaton A^S2
         VRA_State q20 = new VRA_State("q20", true);
@@ -50,7 +53,7 @@ public class testJSONVSPA {
 
         JSONProceduralAutomaton S2 = new JSONProceduralAutomaton("S2", q20);
 
-        S2.createKeyGraph(sortedKeys);
+        S2.createKeyGraph(keys);
         KeyGraph<VRA_State> keyGraph0 = S2.getKeyGraph();
 
         for (Vertex<VRA_State> v : keyGraph0.getVertices()) {
@@ -87,7 +90,7 @@ public class testJSONVSPA {
 
         JSONProceduralAutomaton S0 = new JSONProceduralAutomaton("S0", q00);
     
-        S0.createKeyGraph(sortedKeys);
+        S0.createKeyGraph(keys);
         KeyGraph<VRA_State> keyGraph = S0.getKeyGraph();
 
         for (Vertex<VRA_State> v : keyGraph.getVertices()) {
@@ -116,6 +119,11 @@ public class testJSONVSPA {
         alphabet.addInternalSymbol("n");
         alphabet.addInternalSymbol("#");
 
+        VRA_State q0 = new VRA_State("q0", false);
+        VRA_State q1 = new VRA_State("q1", true);
+        q0.addTransition("S0", q1);
+
+        JSONProceduralAutomaton S = new JSONProceduralAutomaton("s", q0);
 
         // Procedural Automaton A^S0
         VRA_State q00 = new VRA_State("q00", false);
@@ -180,11 +188,12 @@ public class testJSONVSPA {
 
 
         // Definition VSPA
-        JSONVSPA vspa = new JSONVSPA(alphabet);
+        JSON_VRA vspa = new JSON_VRA(alphabet);
+        vspa.addProceduralAutomaton(S, "{");
         vspa.addProceduralAutomaton(S0, "{");
         vspa.addProceduralAutomaton(S1, "[");
         vspa.addProceduralAutomaton(S2, "{");
-        vspa.setStartingAutomaton(S0);
+        vspa.setStartingAutomaton(S);
 
         List<String> keySymbols = new ArrayList<>();
         keySymbols.add("a");
@@ -221,11 +230,18 @@ public class testJSONVSPA {
         
         for (List<String> w : wordsList) {
             System.out.println("-------------------------Accepted----------------------------------------");
+
+            vspa.maxTimeKeyGraph = 0;
+            vspa.totalTimeKeyGraph = 0;
             long start_time = System.nanoTime();
-            boolean result = vspa.accepts(w, false, false).first;
+            Pair<Boolean, Long> result = JSON_VRA.isAccepted(w, vspa, true);
             long tot_time =  System.nanoTime() - start_time;
-            System.out.println("Input: " + String.join("", w) + " -> " + (result ? "ACCEPTED" : "REJECTED"));
-            System.out.println("   Tot time : " + tot_time);
+
+            System.out.println("Input: " + String.join("", w) + " -> " + (result.first ? "ACCEPTED" : "REJECTED"));
+            System.out.println("  Memory : " + result.second);
+            System.out.println("  Total time (ns) : " + tot_time);
+            System.out.println("  Max Key Graph Time (ns): " + vspa.maxTimeKeyGraph);
+            System.out.println("  Total Key Graph Time (ns): " + vspa.totalTimeKeyGraph);
         }
 
         
@@ -236,7 +252,8 @@ public class testJSONVSPA {
                         "{as#b[}#c{}}", 
                         "[s#s]",
                         "{ai#b[s#s#s]#c{}}",
-        };
+                        "{ai#b[s#s#s]#",
+                        };
 
                         
         wordsList = new ArrayList<>();
@@ -248,11 +265,18 @@ public class testJSONVSPA {
         
         for (List<String> w : wordsList) {
             System.out.println("-------------------------Rejected----------------------------------------");
+
+            vspa.maxTimeKeyGraph = 0;
+            vspa.totalTimeKeyGraph = 0;
             long start_time = System.nanoTime();
-            boolean result = vspa.accepts(w, false, false).first;
-            long tot_time =  System.nanoTime() - start_time;
-            System.out.println("Input: " + String.join("", w) + " -> " + (result ? "ACCEPTED" : "REJECTED"));
-            System.out.println("   Tot time : " + tot_time);
+            Pair<Boolean, Long> result = JSON_VRA.isAccepted(w, vspa, true);
+            long tot_time = System.nanoTime() - start_time;
+
+            System.out.println("Input: " + String.join("", w) + " -> " + (result.first ? "ACCEPTED" : "REJECTED"));
+            System.out.println("  Memory : " + result.second);
+            System.out.println("  Total time (ns) : " + tot_time);
+            System.out.println("  Max Key Graph Time (ns): " + vspa.maxTimeKeyGraph);
+            System.out.println("  Total Key Graph Time (ns): " + vspa.totalTimeKeyGraph);
         }
     }
 }

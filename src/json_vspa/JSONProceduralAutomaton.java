@@ -15,8 +15,8 @@ public class JSONProceduralAutomaton extends ProceduralAutomaton {
         super(proceduralSymbol, initialState);
     }
 
-    public void createKeyGraph(Set<String> keySymbols) {
-        keyGraph = new KeyGraph<>();
+    public void createKeyGraph(List<String> sortedKeySymbols) {
+        keyGraph = new KeyGraph<>(sortedKeySymbols);
 
         Set<Vertex<VRA_State>> vertices = new HashSet<>();
 
@@ -27,7 +27,7 @@ public class JSONProceduralAutomaton extends ProceduralAutomaton {
 
         while (!states.isEmpty()) {
             VRA_State state = states.removeFirst();
-            for (String key : keySymbols) {
+            for (String key : sortedKeySymbols) {
                 for (VRA_State successor : state.getTransitions(key)) {
                     for (Set<VRA_State> endStates : successor.getAllTransitions().values()) {
                         for (VRA_State endState : endStates) {

@@ -63,6 +63,7 @@ public class VSPAAlphabet {
     }
 
     public String getCallFromProcedural(String p) { return proceduralToCall.get(p); }
+    public String getReturnFromProcedural(String p) { return getReturnFromCallSymbol(proceduralToCall.get(p)); }
     public Set<String> getProceduralsFromCall(String c) { return callToProcedurals.get(c); }
 
 

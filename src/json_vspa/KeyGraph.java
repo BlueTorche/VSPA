@@ -12,8 +12,13 @@ import java.util.Set;
 public class KeyGraph<L extends State<L>> {
     Map<Vertex<L>, Set<Vertex<L>>> edges = new HashMap<>();
     Map<String, Set<Vertex<L>>> vertexByKey = new HashMap<>();
-    Map<String, Set<L>> stateByKey = new HashMap<>();
+    Map<String, Set<L>> startingStateByKey = new HashMap<>();
     Set<Vertex<L>> initialVertices = new HashSet<>();
+
+    final List<String> sortedKeySymbols;
+    public KeyGraph(List<String> sortedKeySymbols) {
+        this.sortedKeySymbols = sortedKeySymbols;
+    }
 
     public void addEdge(Vertex<L> source, Vertex<L> target) {
         addVertex(source);
@@ -27,10 +32,10 @@ public class KeyGraph<L extends State<L>> {
 
             if (!vertexByKey.containsKey(vertex.key)) {
                 vertexByKey.put(vertex.key, new HashSet<>());
-                stateByKey.put(vertex.key, new HashSet<>());
+                startingStateByKey.put(vertex.key, new HashSet<>());
             }
             vertexByKey.get(vertex.key).add(vertex);
-            stateByKey.get(vertex.key).add(vertex.startState);
+            startingStateByKey.get(vertex.key).add(vertex.startState);
         }
 
     }
@@ -39,6 +44,45 @@ public class KeyGraph<L extends State<L>> {
         initialVertices.add(vertex);
     }
 
+    /*
+     * seenKeys must be a subset of sortedKeySymbols.
+     * Good must be a subset of all vertices of the graph.
+     */
+    public boolean Valid(Set<String> seenKeys, Set<Vertex<L>> Good) {
+        Set<Vertex<L>> vertexSet = new HashSet<>();
+        boolean initialised = false;
+        for (String keySymbol : sortedKeySymbols) {
+            if (seenKeys.contains(keySymbol)) {
+                if (!initialised) {
+                    for (Vertex<L> vertex : vertexByKey.get(keySymbol)) {
+                        if (Good.contains(vertex) && initialVertices.contains(vertex)) {
+                            vertexSet.add(vertex);
+                        }
+                    }
+                    initialised = true;
+                }
+                else {
+                    final Set<Vertex<L>> nextVertexSet = new HashSet<>();
+                    for (Vertex<L> nextVertex : vertexByKey.get(keySymbol)) {
+                        for  (Vertex<L> prevVertex : vertexSet) {
+                            if (edges.get(prevVertex).contains(nextVertex)) {
+                                nextVertexSet.add(nextVertex);
+                            }
+                        }
+                    }
+                    vertexSet = nextVertexSet;
+                }
+            }
+        }
+
+        for (Vertex<L> vertex : vertexSet) {
+            if(vertex.endState.isFinal())
+                return true;
+        }
+
+        return false;
+    }
+/*
     public boolean Valid(Set<String> keys, Set<Vertex<L>> Good) {
         Map<Vertex<L>, Integer> depth = new HashMap<>();
         int n = keys.size();
@@ -78,11 +122,11 @@ public class KeyGraph<L extends State<L>> {
         
         return false;
     }
-
+*/
     public Set<Vertex<L>> getVerticesByKey(String key) {
         return vertexByKey.getOrDefault(key, new HashSet<>());
     }
-    public Set<L> getLocationsReadingKey(String key) { return stateByKey.getOrDefault(key, new HashSet<>()); }
+    public Set<L> getLocationsReadingKey(String key) { return startingStateByKey.getOrDefault(key, new HashSet<>()); }
 
     public Set<Vertex<L>> getVertices() {
         return edges.keySet();

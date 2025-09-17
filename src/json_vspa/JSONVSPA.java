@@ -32,10 +32,10 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata {
         alphabet.addProceduralSymbol(nfa.getProceduralSymbol(), callSymbol);
     }
 
-    public void createKeyGraphs(Set<String> keySymbols) {
+    public void createKeyGraphs(List<String> sortedKeySymbols) {
         for (JSONProceduralAutomaton pa : proceduralAutomata) {
             if (alphabet.getCallFromProcedural(pa.getProceduralSymbol()).equals("{")) {
-                pa.createKeyGraph(keySymbols);
+                pa.createKeyGraph(sortedKeySymbols);
             }
         }
     }
@@ -292,13 +292,13 @@ public class JSONVSPA extends VisiblySystemProceduralAutomata {
                 if (measureMemory) {
                     maxMemory = Math.max(maxMemory, TestResult.getMemoryUse());
                 }
-                return new Pair<Boolean,Long>(true, maxMemory-memoryStart);
+                return new Pair<>(true, maxMemory-memoryStart);
         }
         
         if (measureMemory) {
             maxMemory = Math.max(maxMemory, TestResult.getMemoryUse());
         }
-        return new Pair<Boolean,Long>(false, maxMemory-memoryStart);
+        return new Pair<>(false, maxMemory-memoryStart);
     }
 
     private void debug(String symbol, Set<Map.Entry<VRA_State, String>> currentStates,

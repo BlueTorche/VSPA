@@ -28,7 +28,7 @@ public class TestResult_NewVRA {
 
     public static void basicTypes() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"string\"");
         keySymbols.add("\"double\"");
         keySymbols.add("\"integer\"");
@@ -153,7 +153,7 @@ public class TestResult_NewVRA {
 
     public static void recuriveList() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"name\"");
         keySymbols.add("\"children\"");
 
@@ -225,7 +225,7 @@ public class TestResult_NewVRA {
 
     public static void vim() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"name\"");
         keySymbols.add("\"version\"");
         keySymbols.add("\"description\"");
@@ -239,6 +239,7 @@ public class TestResult_NewVRA {
         keySymbols.add("\"deprecated\"");
         keySymbols.add("\"vim_script_nr\"");
         keySymbols.add("\"script-type\"");
+        keySymbols.add("\"addon-info\"");
         keySymbols.add("\"\\\\S\"");
 
         VSPAAlphabet alphabet = new VSPAAlphabet();
@@ -534,29 +535,29 @@ public class TestResult_NewVRA {
 
     public static void proxies() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"$schema\"");
         keySymbols.add("\"proxies\"");
         keySymbols.add("\"<ProxyName>\"");
+        keySymbols.add("\"desc\"");
         keySymbols.add("\"matchCondition\"");
-        keySymbols.add("\"route\"");
-        keySymbols.add("\"methods\"");
-        keySymbols.add("\"debug\"");
-        keySymbols.add("\"responseOverrides\"");
-        keySymbols.add("\"response.headers.<HeaderName>\"");
-        keySymbols.add("\"response.statusCode\"");
-        keySymbols.add("\"response.body\"");
-        keySymbols.add("\"response.statusReason\"");
-        keySymbols.add("\"^responseheaders.+$\"");
         keySymbols.add("\"backendUri\"");
-        keySymbols.add("\"disabled\"");
         keySymbols.add("\"requestOverrides\"");
+        keySymbols.add("\"responseOverrides\"");
+        keySymbols.add("\"debug\"");
+        keySymbols.add("\"disabled\"");
+        keySymbols.add("\"methods\"");
+        keySymbols.add("\"route\"");
+        keySymbols.add("\"response.statusCode\"");
+        keySymbols.add("\"response.headers.<HeaderName>\"");
+        keySymbols.add("\"response.statusReason\"");
+        keySymbols.add("\"response.body\"");
+        keySymbols.add("\"^responseheaders.+$\"");
         keySymbols.add("\"backend.request.method\"");
         keySymbols.add("\"backend.request.querystring.<ParameterName>\"");
         keySymbols.add("\"backend.request.headers.<HeaderName>\"");
-        keySymbols.add("\"^backendrequestheaders.+$\"");
         keySymbols.add("\"^backendrequestquerystring.+$\"");
-        keySymbols.add("\"desc\"");
+        keySymbols.add("\"^backendrequestheaders.+$\"");
         keySymbols.add("\"\\\\S\"");
 
         VSPAAlphabet alphabet = new VSPAAlphabet();
@@ -979,7 +980,7 @@ public class TestResult_NewVRA {
         }
     }
 
-    public static void keyGraphMeasures(JSON_VRA vspa, Set<String> keySymbols) {
+    public static void keyGraphMeasures(JSON_VRA vspa, List<String> keySymbols) {
         long tot_time = 0;
         int test_case = 10;
         for (int i = 0; i < 10; i++) {

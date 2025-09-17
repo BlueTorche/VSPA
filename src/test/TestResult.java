@@ -29,7 +29,7 @@ public class TestResult {
 
     public static void basicTypes() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"string\"");
         keySymbols.add("\"double\"");
         keySymbols.add("\"integer\"");
@@ -154,7 +154,7 @@ public class TestResult {
 
     public static void recuriveList() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"name\"");
         keySymbols.add("\"children\"");
 
@@ -226,7 +226,7 @@ public class TestResult {
 
     public static void vim() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"name\"");
         keySymbols.add("\"version\"");
         keySymbols.add("\"description\"");
@@ -318,51 +318,6 @@ public class TestResult {
         q23S0.addTransition("#", q24S0);
         VRA_State q25S0 = new VRA_State("q25S0", false);
         q24S0.addTransition("\"\\\\S\"", q25S0);
-        /*q0S0.addTransition("\"type\"", q25S0);
-        q3S0.addTransition("\"type\"", q25S0);
-        q6S0.addTransition("\"type\"", q25S0);
-        q9S0.addTransition("\"type\"", q25S0);
-        q12S0.addTransition("\"type\"", q25S0);
-        q15S0.addTransition("\"type\"", q25S0);
-        q18S0.addTransition("\"type\"", q25S0);
-        q21S0.addTransition("\"type\"", q25S0);
-        q24S0.addTransition("\"type\"", q25S0);
-        q0S0.addTransition("\"url\"", q25S0);
-        q3S0.addTransition("\"url\"", q25S0);
-        q6S0.addTransition("\"url\"", q25S0);
-        q9S0.addTransition("\"url\"", q25S0);
-        q12S0.addTransition("\"url\"", q25S0);
-        q15S0.addTransition("\"url\"", q25S0);
-        q18S0.addTransition("\"url\"", q25S0);
-        q21S0.addTransition("\"url\"", q25S0);
-        q24S0.addTransition("\"url\"", q25S0);
-        q0S0.addTransition("\"deprecated\"", q25S0);
-        q3S0.addTransition("\"deprecated\"", q25S0);
-        q6S0.addTransition("\"deprecated\"", q25S0);
-        q9S0.addTransition("\"deprecated\"", q25S0);
-        q12S0.addTransition("\"deprecated\"", q25S0);
-        q15S0.addTransition("\"deprecated\"", q25S0);
-        q18S0.addTransition("\"deprecated\"", q25S0);
-        q21S0.addTransition("\"deprecated\"", q25S0);
-        q24S0.addTransition("\"deprecated\"", q25S0);
-        q0S0.addTransition("\"vim_script_nr\"", q25S0);
-        q3S0.addTransition("\"vim_script_nr\"", q25S0);
-        q6S0.addTransition("\"vim_script_nr\"", q25S0);
-        q9S0.addTransition("\"vim_script_nr\"", q25S0);
-        q12S0.addTransition("\"vim_script_nr\"", q25S0);
-        q15S0.addTransition("\"vim_script_nr\"", q25S0);
-        q18S0.addTransition("\"vim_script_nr\"", q25S0);
-        q21S0.addTransition("\"vim_script_nr\"", q25S0);
-        q24S0.addTransition("\"vim_script_nr\"", q25S0);
-        q0S0.addTransition("\"script-type\"", q25S0);
-        q3S0.addTransition("\"script-type\"", q25S0);
-        q6S0.addTransition("\"script-type\"", q25S0);
-        q9S0.addTransition("\"script-type\"", q25S0);
-        q12S0.addTransition("\"script-type\"", q25S0);
-        q15S0.addTransition("\"script-type\"", q25S0);
-        q18S0.addTransition("\"script-type\"", q25S0);
-        q21S0.addTransition("\"script-type\"", q25S0);
-        q24S0.addTransition("\"script-type\"", q25S0);*/
         VRA_State q26S0 = new VRA_State("q26S0", true);
         q25S0.addTransition("Uo", q26S0);
         q25S0.addTransition("Ua", q26S0);
@@ -555,29 +510,29 @@ public class TestResult {
 
     public static void proxies() {
         // Alphabet & keyset
-        Set<String> keySymbols = new HashSet<>();
+        List<String> keySymbols = new ArrayList<>();
         keySymbols.add("\"$schema\"");
         keySymbols.add("\"proxies\"");
         keySymbols.add("\"<ProxyName>\"");
+        keySymbols.add("\"desc\"");
         keySymbols.add("\"matchCondition\"");
-        keySymbols.add("\"route\"");
-        keySymbols.add("\"methods\"");
-        keySymbols.add("\"debug\"");
-        keySymbols.add("\"responseOverrides\"");
-        keySymbols.add("\"response.headers.<HeaderName>\"");
-        keySymbols.add("\"response.statusCode\"");
-        keySymbols.add("\"response.body\"");
-        keySymbols.add("\"response.statusReason\"");
-        keySymbols.add("\"^responseheaders.+$\"");
         keySymbols.add("\"backendUri\"");
-        keySymbols.add("\"disabled\"");
         keySymbols.add("\"requestOverrides\"");
+        keySymbols.add("\"responseOverrides\"");
+        keySymbols.add("\"debug\"");
+        keySymbols.add("\"disabled\"");
+        keySymbols.add("\"methods\"");
+        keySymbols.add("\"route\"");
+        keySymbols.add("\"response.statusCode\"");
+        keySymbols.add("\"response.headers.<HeaderName>\"");
+        keySymbols.add("\"response.statusReason\"");
+        keySymbols.add("\"response.body\"");
+        keySymbols.add("\"^responseheaders.+$\"");
         keySymbols.add("\"backend.request.method\"");
         keySymbols.add("\"backend.request.querystring.<ParameterName>\"");
         keySymbols.add("\"backend.request.headers.<HeaderName>\"");
-        keySymbols.add("\"^backendrequestheaders.+$\"");
         keySymbols.add("\"^backendrequestquerystring.+$\"");
-        keySymbols.add("\"desc\"");
+        keySymbols.add("\"^backendrequestheaders.+$\"");
         keySymbols.add("\"\\\\S\"");
 
         VSPAAlphabet alphabet = new VSPAAlphabet();
@@ -1003,7 +958,7 @@ public class TestResult {
         return (runtime.totalMemory() - runtime.freeMemory()) / 1024;
     }
 
-    public static void keyGraphMeasures(JSONVSPA vspa, Set<String> keySymbols) {
+    public static void keyGraphMeasures(JSONVSPA vspa, List<String> keySymbols) {
         long tot_time = 0;
         int test_case = 10;
         for (int i = 0; i < 10; i++) {
