@@ -13,6 +13,7 @@ import vspa.VSPAAlphabet;
 import java.util.*;
 
 public class testJSONVRA {
+    static final boolean DEBUG = false;
     public static void main(String[] args) {
         System.out.println("JSON VSPA :");
         testKeyGraph();
@@ -234,7 +235,7 @@ public class testJSONVRA {
             vspa.maxTimeKeyGraph = 0;
             vspa.totalTimeKeyGraph = 0;
             long start_time = System.nanoTime();
-            Pair<Boolean, Long> result = JSON_VRA.isAccepted(w, vspa, true);
+            Pair<Boolean, Long> result = JSON_VRA.isAccepted(w, vspa, true, testJSONVRA.DEBUG);
             long tot_time =  System.nanoTime() - start_time;
 
             System.out.println("Input: " + String.join("", w) + " -> " + (result.first ? "ACCEPTED" : "REJECTED"));
@@ -269,7 +270,7 @@ public class testJSONVRA {
             vspa.maxTimeKeyGraph = 0;
             vspa.totalTimeKeyGraph = 0;
             long start_time = System.nanoTime();
-            Pair<Boolean, Long> result = JSON_VRA.isAccepted(w, vspa, true);
+            Pair<Boolean, Long> result = JSON_VRA.isAccepted(w, vspa, true, testJSONVRA.DEBUG);
             long tot_time = System.nanoTime() - start_time;
 
             System.out.println("Input: " + String.join("", w) + " -> " + (result.first ? "ACCEPTED" : "REJECTED"));

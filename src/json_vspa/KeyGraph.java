@@ -53,6 +53,9 @@ public class KeyGraph<L extends State<L>> {
         boolean initialised = false;
         for (String keySymbol : sortedKeySymbols) {
             if (seenKeys.contains(keySymbol)) {
+                if (vertexByKey.get(keySymbol) == null)
+                    return false;
+
                 if (!initialised) {
                     for (Vertex<L> vertex : vertexByKey.get(keySymbol)) {
                         if (Good.contains(vertex) && initialVertices.contains(vertex)) {

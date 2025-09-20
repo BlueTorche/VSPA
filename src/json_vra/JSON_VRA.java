@@ -4,6 +4,7 @@ import java.util.*;
 
 import automaton.State;
 
+import com.google.common.testing.GcFinalization;
 import test.TestResult;
 import utils.Pair;
 import vspa.ProceduralAutomaton;
@@ -372,11 +373,16 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata {
         System.out.println("\n");
     } */
 
-    public static Pair<Boolean,Long> isAccepted(List<String> word, JSON_VRA vspa, boolean measureMemory) {
+    public static Pair<Boolean,Long> isAccepted(List<String> word, JSON_VRA vspa, boolean measureMemory, boolean DEBUG) {
         final long memoryStart;
         long maxMemory;
 
+        vspa.maxTimeKeyGraph = 0;
+        vspa.totalTimeKeyGraph = 0;
+
         if (measureMemory) {
+            System.gc();
+            GcFinalization.awaitFullGc();
             System.gc();
             memoryStart = TestResult.getMemoryUse();
             maxMemory = memoryStart;
@@ -392,8 +398,11 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata {
                 System.gc();
             }
 
-            // System.out.println(state.getReachedLocations().toString() + " -> " + currentSymbol);
-
+            if (DEBUG) {
+                System.out.println(currentSymbol + " : ");
+                System.out.println("    " + state.getReachedLocations().toString());
+                System.out.println("    " + (state.getStack() == null ? "null" : state.getStack().toString()));
+            }
             final String nextSymbol = word.get(i);
             state = vspa.getSuccessor(state, currentSymbol, nextSymbol);
             currentSymbol = nextSymbol;
@@ -409,6 +418,12 @@ public class JSON_VRA extends VisiblySystemProceduralAutomata {
 
         if (measureMemory) {
             System.gc();
+        }
+
+        if (DEBUG) {
+            System.out.println(currentSymbol + " : ");
+            System.out.println("    " + state.getReachedLocations().toString());
+            System.out.println("    " + (state.getStack() == null ? "null" : state.getStack().toString()));
         }
 
         state = vspa.getSuccessor(state, currentSymbol, null);

@@ -10,13 +10,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import com.google.common.testing.GcFinalization;
 
 
 public class TestResult_NewVRA {
-    static String[] entetes = {"Documents ID", "Automaton Time (µs)", "Automaton Memory", "Result"};
+    static String[] entetes = {"Documents ID",
+            "Automaton Time (µs)",
+            "Automaton Memory",
+            "Result",
+            "Max KeyGraph time",
+            "Tot Key Graph Time"
+    };
     static boolean DEBUG = false;
 
     public static void main(String[] args) {
@@ -396,15 +404,15 @@ public class TestResult_NewVRA {
         VRA_State q6S3 = new VRA_State("q6S3", false);
         q5S3.addTransition("#", q6S3);*/
         VRA_State q7S3 = new VRA_State("q7S3", false);
-        q3S3.addTransition("\"url\"", q7S3);
+        q3S3.addTransition("\"type\"", q7S3);
         VRA_State q8S3 = new VRA_State("q8S3", false);
-        q7S3.addTransition("\"\\\\S\"", q8S3);
+        q7S3.addTransition("\"\\\\E\"", q8S3);
         VRA_State q9S3 = new VRA_State("q9S3", false);
         q8S3.addTransition("#", q9S3);
         VRA_State q9S3prime = new VRA_State("q9S3prime", false);
-        q9S3.addTransition("\"type\"", q9S3prime);
+        q9S3.addTransition("\"url\"", q9S3prime);
         VRA_State q10S3prime = new VRA_State("q10S3prime", true);
-        q9S3prime.addTransition("\"\\\\E\"", q10S3prime);
+        q9S3prime.addTransition("\"\\\\S\"", q10S3prime);
         VRA_State q11S3prime = new VRA_State("q11S3prime", false);
         q10S3prime.addTransition("#", q11S3prime);
         VRA_State q10S3 = new VRA_State("q10S3", false);
@@ -893,90 +901,98 @@ public class TestResult_NewVRA {
         System.out.println(directoryPath);
         List<List<String>> datas = new ArrayList<>();
 
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        String outputPath = "C:/Users/dubru/Documents/GitHub/VSPA/src/Result/new_result_"
+                + jsontype + "_" + timestamp + ".csv";
+
         int i = 0;
         if (directory.isDirectory()) {
             File[] files = directory.listFiles();
             if (files != null) {
                 for (File file : files) {
                     try {
-                        System.out.println("Processing file: " + file.getName());
+                        // System.out.println("Processing file: " + file.getName());
 
                         List<String> json = SanitizeJSON.sanitizeJSON(file.getAbsolutePath());
 
+                        System.gc();
+                        GcFinalization.awaitFullGc();
+
                         long tot_time = 0;
+                        long tot_max_key_graph = 0;
+                        long tot_tot_key_graph = 0;
                         int test_case = 100;
                         for (int j = 0; j < test_case; j++) {
                             System.gc();
                             long time = System.nanoTime();
-                            // automaton.accepts(json,false, TestResult_NewVRA.DEBUG);
+                            JSON_VRA.isAccepted(json, automaton, false, false);
                             time = (System.nanoTime() - time);
                             tot_time += time;
+                            tot_max_key_graph += automaton.maxTimeKeyGraph;
+                            tot_tot_key_graph += automaton.totalTimeKeyGraph;
                         }
 
                         long average_time = tot_time / test_case;
+                        long average_max_key_graph = tot_max_key_graph / test_case;
+                        long average_tot_key_graph  = tot_tot_key_graph / test_case;
 
-                        long time = System.nanoTime();
-                        boolean result = false;
-                        // boolean result = automaton.accepts(json,false, TestResult_NewVRA.DEBUG).first;
-                        time = (System.nanoTime() - time);
+                        boolean result = JSON_VRA.isAccepted(json, automaton, false, TestResult_NewVRA.DEBUG).first;
 
                         Long memory;
-                        if (false && !TestResult_NewVRA.DEBUG) {
+                        if (!TestResult_NewVRA.DEBUG) {
                             // import com.google.common.testing.GcFinalization;
-                            //  GcFinalization.awaitFullGc(); ??
-                            TestResult.forceFullGc();
-                            System.gc();
+                            memory = JSON_VRA.isAccepted(json, automaton, true, false).second;
                             // memory = automaton.accepts(json,true, TestResult_NewVRA.DEBUG).second;
                         }
                         else {
                             memory = TestResult.getMemoryUse();
                         }
 
+                        /*
                         System.out.println("----------------------------------------------------------------------");
                         System.out.println(file.getAbsolutePath());
                         System.out.println(json);
                         System.out.println("      -> " + (result ? "ACCEPTED" : "REJECTED"));
                         System.out.println("    Time: " + average_time/1_000 + "µs");
                         System.out.println("    Memory: " + memory + "KB");
+                        */
 
                         List<String> data = new ArrayList<>();
                         data.add(file.getName());
-                        data.add(String.valueOf((int) time/1_000));
+                        data.add(String.valueOf((int) average_time/1_000));
                         data.add(String.valueOf(memory));
                         data.add(String.valueOf(result));
+                        data.add(String.valueOf((int) average_max_key_graph/1_000));
+                        data.add(String.valueOf((int) average_tot_key_graph/1_000));
                         datas.add(data);
 
-                        System.out.println("i = " + i);
+                        // System.out.println("i = " + i);
                         i++;
 
+                        try (FileWriter writer = new FileWriter(outputPath, true)) {
+                            File f = new File(outputPath);
+                            if (f.length() == 0) {
+                                writer.write(String.join(";", entetes) + "\n");
+                            }
+                            writer.write(String.join(";", data) + "\n");
+                            writer.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         if (TestResult_NewVRA.DEBUG) {
-                            if (i > 1) {
+                            if (i > 100) {
                                 break;
                             }
                         }
-
                     } catch (IOException e) {
                         System.out.println("Error while opening file " + file.getAbsolutePath());
                         e.printStackTrace();
                     }
+
                 }
+
             }
-        }
-
-        // System.out.println(datas.toString());
-
-        try (FileWriter writer = new FileWriter("C:/Users/dubru/Documents/GitHub/VSPA/src/Result/result" + jsontype + ".csv")) {
-            // Écrire les entêtes
-            writer.write(String.join(";", entetes) + "\n");
-
-            // Écrire les données
-            for (List<String> ligne : datas) {
-                writer.write(String.join(";", ligne) + "\n");
-            }
-
-            System.out.println("Fichier CSV créé avec succès !");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
